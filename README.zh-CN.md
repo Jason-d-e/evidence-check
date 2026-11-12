@@ -61,6 +61,12 @@ python skills/evidence-check/scripts/check_evidence.py claims.json --sources eva
 | 旧值已被新文件替换，但旧文件还在资料里 | | v2 题目里都抓到了 | |
 | 单位换算（`4.3万` 对 `43,000`）、罗马数字 | | | ✓ |
 
+## 相关工具
+
+- **Claude API 的 [Citations](https://platform.claude.com/docs/en/build-with-claude/citations)（引用功能）** 直接从你的文档里截取引文，引文一定在原文里。在这个 API 上做产品，就用它。它是在 Messages API 里给 Claude 正在写的回答附出处：不检查说法里的数字是否在引文里；用工具读文件的 Agent 和其他模型用不到它；也不会把别人写好的草稿拆成一条条说法来核对。evidence-check 管的是这几块。
+- **云平台的依据检查**（Vertex AI check grounding、Azure AI Content Safety groundedness detection、Amazon Bedrock Guardrails contextual grounding check）和**开源检测模型**（LettuceDetect、MiniCheck、HHEM）用模型判断一段话有没有依据。evidence-check 给每条说法附上原文和行号，比对数字不用模型、不用云账号，也不用装别的包。
+- **评测框架**（RAGAS、DeepEval、TruLens、promptfoo）事后给一批测试题打分。这个项目的评测用的是 promptfoo。
+
 ## 评测
 
 在虚构资料上做了两轮，同一个模型（Claude Haiku 5.5）装和不装 Skill，每道题跑两遍：

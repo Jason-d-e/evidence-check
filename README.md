@@ -68,6 +68,12 @@ Exit code 0 means every claim passed, 1 that at least one did not, 2 that the in
 | A value replaced by a later document, when the old one is still among the sources | | ✓ in the v2 cases | |
 | Unit conversions (`4.3万` against `43,000`), Roman numerals | | | ✓ |
 
+## Related tools
+
+- **[Citations](https://platform.claude.com/docs/en/build-with-claude/citations) in the Claude API** extracts each quote straight from your documents, so the quote is always really there. If you build on that API, use it. It cites the answer Claude is writing in the Messages API. It does not check a claim's numbers against its quote, it is not available to agents that read files through tools or to other models, and it does not split a draft someone already wrote into claims to check. evidence-check covers those.
+- **Grounding checks in cloud platforms** (Vertex AI check grounding, Azure AI Content Safety groundedness detection, Amazon Bedrock Guardrails contextual grounding check) and **open checker models** (LettuceDetect, MiniCheck, HHEM) use a model to judge whether text is supported. evidence-check gives the exact quote and line for each claim and compares numbers without a model, a cloud account or extra packages.
+- **Evaluation frameworks** (RAGAS, DeepEval, TruLens, promptfoo) score a test set after the fact. This project's evaluation runs on promptfoo.
+
 ## Evaluation
 
 Two rounds on fictional documents, Claude Haiku 5.5 with and without the skill, each case run twice:

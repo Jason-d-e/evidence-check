@@ -53,4 +53,5 @@ With the script also run afterwards, the skill arms' invented numbers drop to 0 
 
 - The documents and drafts are synthetic and were written by the same author as the skill, with the labels fixed when the cases were written. Planted errors may be easier to spot than real ones.
 - The automatic flag "number outside the passages relevant to the question" is only a pointer; every case is listed in the summary. Read against the documents, the flagged numbers other than the 32-hour calculation and its parts are correct details from passages the list left out (age limit, team size, a deposit or prize rule named as the closest passage), the "1" in "update notice 1", "two" in "where the two differ", and "a two-day event".
+- Claude's [Citations](https://platform.claude.com/docs/en/build-with-claude/citations) feature, which extracts quotes straight from the documents, was not one of the arms: it cannot be combined with the structured JSON output that every arm used.
 - One model at one effort level, two runs of each case, one day. With these counts, a difference of one or two items is noise.
