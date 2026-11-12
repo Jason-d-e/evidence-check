@@ -1,0 +1,9 @@
+{
+  "about": "Harness check only, not part of the evaluation: confirms that the provider, the tool loop and the output schema work before the frozen cases are run.",
+  "questions": [
+    {"id": "S01", "lang": "en", "question": "What is the address of the DemoClub Learning Centre?"}
+  ],
+  "drafts": [
+    {"id": "S02", "lang": "en", "kind": "short note", "text": "The DemoClub Learning Centre has 40 lockers. Each locker comes with a free padlock."}
+  ]
+}

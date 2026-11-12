@@ -1,0 +1,25 @@
+# evidence-check evaluation: plain instruction vs the skill, checking 12 drafts (84 sentences)
+# against the fictional DemoClub documents. Same model (claude-haiku-5-5, effort medium),
+# same documents, same JSON output; only the system prompt differs.
+# Scoring, including the script step, is done afterwards by summarize.py.
+# Run from this folder:
+#   PROMPTFOO_DISABLE_TELEMETRY=1 npx -y promptfoo@0.125.1 eval -c promptfooconfig.yaml --no-cache --repeat 2 -o results/run-YYYY-MM-DD.json
+description: evidence-check – plain vs skill
+
+prompts:
+  - "{{draft_id}}"
+
+providers:
+  - id: file://provider.mjs
+    label: plain
+    config:
+      arm: plain
+  - id: file://provider.mjs
+    label: skill
+    config:
+      arm: skill
+
+tests: file://tests.mjs
+
+evaluateOptions:
+  maxConcurrency: 2

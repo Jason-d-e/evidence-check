@@ -1,0 +1,156 @@
+{
+  "about": "12 drafts written from the fictional DemoClub documents in eval/sources (D01-D03 are current; D04, an outdated draft, is not given to the model). Each sentence is labelled supported or unsupported. Error types: number (a date, time, count or duration changed), outdated (taken from the superseded draft D04), invented (not in the documents), contradiction (the documents say the opposite, with no number involved). 'gold' holds the correct quotes for a supported sentence, and for an unsupported one the real sentence a careless checker would most likely cite (empty when there is none). Written on 2026-11-12; labels were fixed when the drafts were written.",
+  "sources": {
+    "W": "D01-workshop-information.md",
+    "S": "D02-support-guide.md",
+    "A": "D03-event-account-guide.md"
+  },
+  "drafts": [
+    {
+      "id": "E1", "lang": "en", "kind": "email to participants",
+      "sentences": [
+        {"text": "The Intro to AI Tools workshop runs online on 12 November 2026 from 19:00 to 20:30 MYT.", "label": "supported", "type": "supported",
+         "gold": [["W", "The Intro to AI Tools workshop takes place on 12 November 2026 from 19:00 to 20:30 MYT."], ["W", "It is an online workshop."]]},
+        {"text": "There are 30 places in total.", "label": "unsupported", "type": "number", "gold": [["W", "The capacity is 24 participants."]]},
+        {"text": "Taking part is free of charge.", "label": "supported", "type": "supported", "gold": [["W", "Participation is free."]]},
+        {"text": "Registration closes at 12:00 MYT on 9 November.", "label": "unsupported", "type": "outdated", "gold": [["W", "Registration closes on 11 November 2026 at 18:00 MYT."]]},
+        {"text": "Your confirmation email will arrive by 20:00 MYT on 11 November.", "label": "supported", "type": "supported", "gold": [["W", "A confirmation email is sent by 11 November at 20:00 MYT."]]},
+        {"text": "A recording will be shared with everyone afterwards.", "label": "unsupported", "type": "invented", "gold": []},
+        {"text": "You do not need any programming experience.", "label": "supported", "type": "supported", "gold": [["W", "No prior programming experience is required."]]}
+      ]
+    },
+    {
+      "id": "E2", "lang": "en", "kind": "FAQ answer",
+      "sentences": [
+        {"text": "Anyone who is a currently enrolled university student aged 18 or over can join.", "label": "supported", "type": "supported", "gold": [["W", "The workshop is open to currently enrolled university students aged 18 or older."]]},
+        {"text": "Submitting the form guarantees you a place.", "label": "unsupported", "type": "contradiction", "gold": [["W", "Submitting the form does not guarantee a place."]]},
+        {"text": "If all places are taken, later applicants go onto a waiting list.", "label": "supported", "type": "supported", "gold": [["W", "If all 24 places are filled, later applicants join a waiting list."]]},
+        {"text": "Support replies within 24 hours.", "label": "unsupported", "type": "number", "gold": [["S", "The target first response time is two business days."]]},
+        {"text": "Support is available Monday to Friday, 10:00 to 18:00 MYT.", "label": "supported", "type": "supported", "gold": [["S", "Support hours are Monday to Friday, 10:00 to 18:00 MYT."]]},
+        {"text": "You can also reach support through live chat.", "label": "unsupported", "type": "contradiction", "gold": [["S", "There is no live-chat service or guaranteed immediate response."]]},
+        {"text": "Never send your password or API keys in a support request.", "label": "supported", "type": "supported", "gold": [["S", "Never send passwords, API keys or private identity documents."]]}
+      ]
+    },
+    {
+      "id": "E3", "lang": "en", "kind": "summary for organisers",
+      "sentences": [
+        {"text": "Participants need a laptop with an up-to-date browser and an internet connection.", "label": "supported", "type": "supported", "gold": [["W", "Participants need a laptop with an up-to-date web browser and an internet connection."]]},
+        {"text": "Each participant receives a certificate of attendance.", "label": "unsupported", "type": "contradiction", "gold": [["W", "There is no certificate for attending this workshop."]]},
+        {"text": "To cancel, participants reply to the confirmation email before 18:00 MYT on 11 November 2026.", "label": "supported", "type": "supported", "gold": [["S", "To cancel an Intro to AI Tools workshop registration, reply to the confirmation email before 11 November 2026 at 18:00 MYT."]]},
+        {"text": "A registration can be transferred to a friend.", "label": "unsupported", "type": "contradiction", "gold": [["S", "Transfers to a different person are not supported."]]},
+        {"text": "A cancelled place goes to the waiting list.", "label": "supported", "type": "supported", "gold": [["S", "Cancellation releases a place to the waiting list."]]},
+        {"text": "The session lasts two hours.", "label": "unsupported", "type": "number", "gold": [["W", "The Intro to AI Tools workshop takes place on 12 November 2026 from 19:00 to 20:30 MYT."]]},
+        {"text": "The workshop will be held on Zoom.", "label": "unsupported", "type": "invented", "gold": [["W", "It is an online workshop."]]}
+      ]
+    },
+    {
+      "id": "E4", "lang": "en", "kind": "account help page",
+      "sentences": [
+        {"text": "A password reset link expires after 30 minutes.", "label": "supported", "type": "supported", "gold": [["A", "A DemoClub event-account password reset link expires after 30 minutes."]]},
+        {"text": "You can request up to five reset links per hour.", "label": "unsupported", "type": "number", "gold": [["A", "At most three password-reset requests are allowed in one hour."]]},
+        {"text": "If a link expires, simply request a new one.", "label": "supported", "type": "supported", "gold": [["A", "If a link expires, request a new one."]]},
+        {"text": "DemoClub support will never ask for your current password.", "label": "supported", "type": "supported", "gold": [["A", "Support never asks users to send their current password."]]},
+        {"text": "The reset link stays valid for an hour.", "label": "unsupported", "type": "number", "gold": [["A", "A DemoClub event-account password reset link expires after 30 minutes."]]},
+        {"text": "The joining link is in your confirmation email.", "label": "supported", "type": "supported", "gold": [["A", "The workshop joining link is included in the confirmation email."]]},
+        {"text": "The joining link is also posted on the DemoClub website.", "label": "unsupported", "type": "invented", "gold": [["A", "The workshop joining link is not published in this knowledge base."]]}
+      ]
+    },
+    {
+      "id": "E5", "lang": "en", "kind": "social media post",
+      "sentences": [
+        {"text": "Join our Intro to AI Tools workshop on 10 November!", "label": "unsupported", "type": "outdated", "gold": [["W", "The Intro to AI Tools workshop takes place on 12 November 2026 from 19:00 to 20:30 MYT."]]},
+        {"text": "It's free and online.", "label": "supported", "type": "supported", "gold": [["W", "Participation is free."], ["W", "It is an online workshop."]]},
+        {"text": "Only 20 seats available.", "label": "unsupported", "type": "outdated", "gold": [["W", "The capacity is 24 participants."]]},
+        {"text": "No coding experience needed.", "label": "supported", "type": "supported", "gold": [["W", "No prior programming experience is required."]]},
+        {"text": "Snacks will be delivered to the first 10 sign-ups.", "label": "unsupported", "type": "invented", "gold": []},
+        {"text": "Sign up through the DemoClub event form before 18:00 MYT on 11 November.", "label": "supported", "type": "supported", "gold": [["W", "A person registers through the DemoClub event form."], ["W", "Registration closes on 11 November 2026 at 18:00 MYT."]]},
+        {"text": "Open to currently enrolled university students aged 18 or older.", "label": "supported", "type": "supported", "gold": [["W", "The workshop is open to currently enrolled university students aged 18 or older."]]}
+      ]
+    },
+    {
+      "id": "E6", "lang": "en", "kind": "support reply",
+      "sentences": [
+        {"text": "You can write to us at help@democlub.invalid.", "label": "supported", "type": "supported", "gold": [["S", "The fictional support address is help@democlub.invalid."]]},
+        {"text": "Please include the event name and a description of the problem.", "label": "supported", "type": "supported", "gold": [["S", "A support request should contain the event name, a description of the problem, and a screenshot with private information removed if useful."]]},
+        {"text": "A screenshot helps, as long as private information is removed.", "label": "supported", "type": "supported", "gold": [["S", "A support request should contain the event name, a description of the problem, and a screenshot with private information removed if useful."]]},
+        {"text": "We aim to send a first response within three business days.", "label": "unsupported", "type": "number", "gold": [["S", "The target first response time is two business days."]]},
+        {"text": "Our team answers messages immediately.", "label": "unsupported", "type": "contradiction", "gold": [["S", "There is no live-chat service or guaranteed immediate response."]]},
+        {"text": "If you cannot find your confirmation email, check your spam folder first.", "label": "supported", "type": "supported", "gold": [["A", "A confirmed participant who cannot find the email should check the spam folder and then contact support."]]},
+        {"text": "We can also reset your password for you by phone.", "label": "unsupported", "type": "invented", "gold": []}
+      ]
+    },
+    {
+      "id": "Z1", "lang": "zh", "kind": "微信群通知",
+      "sentences": [
+        {"text": "Intro to AI Tools 工作坊在2026年11月12日晚上19:00到20:30（马来西亚时间）线上举行。", "label": "supported", "type": "supported",
+         "gold": [["W", "The Intro to AI Tools workshop takes place on 12 November 2026 from 19:00 to 20:30 MYT."], ["W", "It is an online workshop."]]},
+        {"text": "名额共有25个。", "label": "unsupported", "type": "number", "gold": [["W", "The capacity is 24 participants."]]},
+        {"text": "参加免费。", "label": "supported", "type": "supported", "gold": [["W", "Participation is free."]]},
+        {"text": "报名在11月9日中午12点截止。", "label": "unsupported", "type": "outdated", "gold": [["W", "Registration closes on 11 November 2026 at 18:00 MYT."]]},
+        {"text": "确认邮件会在11月11日晚上8点前发出。", "label": "supported", "type": "supported", "gold": [["W", "A confirmation email is sent by 11 November at 20:00 MYT."]]},
+        {"text": "工作坊结束后会发放结业证书。", "label": "unsupported", "type": "contradiction", "gold": [["W", "There is no certificate for attending this workshop."]]},
+        {"text": "不需要任何编程基础。", "label": "supported", "type": "supported", "gold": [["W", "No prior programming experience is required."]]}
+      ]
+    },
+    {
+      "id": "Z2", "lang": "zh", "kind": "常见问题解答",
+      "sentences": [
+        {"text": "只有在读的大学生、并且年满18岁才能参加。", "label": "supported", "type": "supported", "gold": [["W", "The workshop is open to currently enrolled university students aged 18 or older."]]},
+        {"text": "提交报名表就一定能拿到名额。", "label": "unsupported", "type": "contradiction", "gold": [["W", "Submitting the form does not guarantee a place."]]},
+        {"text": "名额满了之后，后来报名的人会进入候补名单。", "label": "supported", "type": "supported", "gold": [["W", "If all 24 places are filled, later applicants join a waiting list."]]},
+        {"text": "客服会在一个工作日内回复。", "label": "unsupported", "type": "number", "gold": [["S", "The target first response time is two business days."]]},
+        {"text": "客服时间是周一到周五10:00到18:00。", "label": "supported", "type": "supported", "gold": [["S", "Support hours are Monday to Friday, 10:00 to 18:00 MYT."]]},
+        {"text": "也可以通过在线聊天联系客服。", "label": "unsupported", "type": "contradiction", "gold": [["S", "There is no live-chat service or guaranteed immediate response."]]},
+        {"text": "不要在求助时发送密码或API密钥。", "label": "supported", "type": "supported", "gold": [["S", "Never send passwords, API keys or private identity documents."]]}
+      ]
+    },
+    {
+      "id": "Z3", "lang": "zh", "kind": "组织者内部摘要",
+      "sentences": [
+        {"text": "参加者需要一台装有最新浏览器、能上网的笔记本电脑。", "label": "supported", "type": "supported", "gold": [["W", "Participants need a laptop with an up-to-date web browser and an internet connection."]]},
+        {"text": "工作坊总时长两个小时。", "label": "unsupported", "type": "number", "gold": [["W", "The Intro to AI Tools workshop takes place on 12 November 2026 from 19:00 to 20:30 MYT."]]},
+        {"text": "取消报名要在2026年11月11日18:00前回复确认邮件。", "label": "supported", "type": "supported", "gold": [["S", "To cancel an Intro to AI Tools workshop registration, reply to the confirmation email before 11 November 2026 at 18:00 MYT."]]},
+        {"text": "报名可以转让给其他人。", "label": "unsupported", "type": "contradiction", "gold": [["S", "Transfers to a different person are not supported."]]},
+        {"text": "取消后空出的名额会给候补名单上的人。", "label": "supported", "type": "supported", "gold": [["S", "Cancellation releases a place to the waiting list."]]},
+        {"text": "工作坊会在腾讯会议上进行。", "label": "unsupported", "type": "invented", "gold": [["W", "It is an online workshop."]]},
+        {"text": "工作坊的加入链接在确认邮件里。", "label": "supported", "type": "supported", "gold": [["A", "The workshop joining link is included in the confirmation email."]]}
+      ]
+    },
+    {
+      "id": "Z4", "lang": "zh", "kind": "账号帮助",
+      "sentences": [
+        {"text": "密码重置链接30分钟后失效。", "label": "supported", "type": "supported", "gold": [["A", "A DemoClub event-account password reset link expires after 30 minutes."]]},
+        {"text": "每小时最多可以申请5次密码重置。", "label": "unsupported", "type": "number", "gold": [["A", "At most three password-reset requests are allowed in one hour."]]},
+        {"text": "链接过期了就重新申请一个。", "label": "supported", "type": "supported", "gold": [["A", "If a link expires, request a new one."]]},
+        {"text": "客服绝不会向你索要当前密码。", "label": "supported", "type": "supported", "gold": [["A", "Support never asks users to send their current password."]]},
+        {"text": "重置链接的有效期是一个小时。", "label": "unsupported", "type": "number", "gold": [["A", "A DemoClub event-account password reset link expires after 30 minutes."]]},
+        {"text": "加入链接也会公布在DemoClub官网上。", "label": "unsupported", "type": "invented", "gold": [["A", "The workshop joining link is not published in this knowledge base."]]},
+        {"text": "找不到确认邮件的话，先看看垃圾邮件文件夹，再联系客服。", "label": "supported", "type": "supported", "gold": [["A", "A confirmed participant who cannot find the email should check the spam folder and then contact support."]]}
+      ]
+    },
+    {
+      "id": "Z5", "lang": "zh", "kind": "小红书风格宣传",
+      "sentences": [
+        {"text": "AI工具入门工作坊11月10日开讲！", "label": "unsupported", "type": "outdated", "gold": [["W", "The Intro to AI Tools workshop takes place on 12 November 2026 from 19:00 to 20:30 MYT."]]},
+        {"text": "免费、线上参加。", "label": "supported", "type": "supported", "gold": [["W", "Participation is free."], ["W", "It is an online workshop."]]},
+        {"text": "只有20个名额，先到先得。", "label": "unsupported", "type": "outdated", "gold": [["W", "The capacity is 24 participants."]]},
+        {"text": "零基础也能参加。", "label": "supported", "type": "supported", "gold": [["W", "No prior programming experience is required."]]},
+        {"text": "前10名报名的人会收到零食礼包。", "label": "unsupported", "type": "invented", "gold": []},
+        {"text": "通过DemoClub活动表单报名，11月11日18:00截止。", "label": "supported", "type": "supported", "gold": [["W", "A person registers through the DemoClub event form."], ["W", "Registration closes on 11 November 2026 at 18:00 MYT."]]},
+        {"text": "面向年满18岁的在读大学生。", "label": "supported", "type": "supported", "gold": [["W", "The workshop is open to currently enrolled university students aged 18 or older."]]}
+      ]
+    },
+    {
+      "id": "Z6", "lang": "zh", "kind": "客服回复",
+      "sentences": [
+        {"text": "可以发邮件到help@democlub.invalid联系我们。", "label": "supported", "type": "supported", "gold": [["S", "The fictional support address is help@democlub.invalid."]]},
+        {"text": "请写明活动名称和问题描述。", "label": "supported", "type": "supported", "gold": [["S", "A support request should contain the event name, a description of the problem, and a screenshot with private information removed if useful."]]},
+        {"text": "可以附上截图，但要先去掉个人信息。", "label": "supported", "type": "supported", "gold": [["S", "A support request should contain the event name, a description of the problem, and a screenshot with private information removed if useful."]]},
+        {"text": "我们争取在三个工作日内首次回复。", "label": "unsupported", "type": "number", "gold": [["S", "The target first response time is two business days."]]},
+        {"text": "我们的团队会马上回复每一条消息。", "label": "unsupported", "type": "contradiction", "gold": [["S", "There is no live-chat service or guaranteed immediate response."]]},
+        {"text": "如果找不到确认邮件，请先检查垃圾邮件文件夹。", "label": "supported", "type": "supported", "gold": [["A", "A confirmed participant who cannot find the email should check the spam folder and then contact support."]]},
+        {"text": "我们也可以通过电话帮你重置密码。", "label": "unsupported", "type": "invented", "gold": []}
+      ]
+    }
+  ]
+}

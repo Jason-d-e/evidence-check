@@ -1,0 +1,9 @@
+{
+  "name": "evidence-check-eval",
+  "private": true,
+  "type": "module",
+  "description": "Plain prompt vs evidence-check skill, same model and same output format.",
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.6.0"
+  }
+}

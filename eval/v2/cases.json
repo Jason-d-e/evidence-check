@@ -1,0 +1,398 @@
+{
+  "about": "v2 held-out cases for evidence-check, written on 2026-11-12 after SKILL.md v0.2 was frozen and before any model saw them. Fictional DemoClub Build Weekend documents in sources/ (B02 amends B01; B03 is a Chinese FAQ that already includes the amendment). 'questions' are free-answer tasks (Mode A); 'drafts' are unsplit drafts to check (Mode B). Tokens: a string of digits or a clock time is compared with the numbers in the answer; any other string is a case-insensitive substring with spaces removed; a list means any one of them. 'gold' quotes: for a question, the passages relevant to it; for a supported draft item, the quotes that support it; for an unsupported draft item, the real sentence a careless checker would most likely cite (empty when there is none). Labels were fixed when the cases were written, before any model saw them.",
+  "sources": ["B01-build-weekend-handbook.md", "B02-update-notice-1.md", "B03-faq-zh.md", "B04-venue-and-access.md"],
+  "questions": [
+    {
+      "id": "FQ01", "lang": "en", "expect": "answer",
+      "question": "I'd like to take part in Build Weekend. What do I need to do before the event, and by when?",
+      "key_facts": [{"name": "registration deadline", "all": [["3 january", "january 3"], "23:59"]}, {"name": "deposit", "all": ["50"]}],
+      "outdated": [{"name": "travel grant cap", "old": ["300"], "new": ["400"]}],
+      "gold": [
+        ["B01", "Registration opens on 1 December 2026 and closes on 3 January 2027 at 23:59 MYT, or earlier if all 120 places are taken."],
+        ["B01", "Each participant registers individually through the DemoClub event form, even when they already have a team."],
+        ["B01", "A place is confirmed only after a refundable deposit of RM 50 is paid."],
+        ["B01", "Confirmation emails are sent within 3 working days of payment."],
+        ["B01", "The deposit is refunded within 14 days after the event to every participant who checks in on both days."],
+        ["B01", "A participant who cancels by 9 January 2027 at 23:59 MYT gets the deposit back in full."],
+        ["B01", "Up to 20 travel grants are available for participants who live more than 100 km from the venue."],
+        ["B01", "Apply through the travel grant form by 20 December 2026; decisions are emailed by 28 December 2026."],
+        ["B02", "The maximum travel grant rises from RM 300 to RM 400 per participant."],
+        ["B01", "Tell us about food allergies in the registration form by 3 January 2027."],
+        ["B01", "Bring your own laptop and charger; DemoClub cannot lend laptops."],
+        ["B01", "Bring your student ID card and the QR code from your confirmation email; both are checked at check-in."],
+        ["B04", "If you need any other support, tell us in the registration form or write to access@democlub.invalid at least 7 days before the event."],
+        ["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."],
+        ["B01", "Doors open at 08:15 on Saturday and at 08:00 on Sunday."],
+        ["B01", "Participants without a team are matched into teams at team formation on Saturday morning."],
+        ["B01", "Saturday | 09:45 | Team formation for people without a team"]
+      ]
+    },
+    {
+      "id": "FQ02", "lang": "en", "expect": "answer",
+      "question": "What time does project submission close?",
+      "key_facts": [{"name": "submission deadline", "all": ["14:00"]}],
+      "outdated": [{"name": "submission deadline", "old": ["13:00"], "new": ["14:00"]}],
+      "gold": [
+        ["B02", "Project submission now closes on Sunday 17 January 2027 at 14:00 MYT instead of 13:00."],
+        ["B02", "Demos still start at 14:30."],
+        ["B01", "Late submissions are not judged."],
+        ["B01", "Each team submits one project through the submission page before submission closes."],
+        ["B01", "A submission must include a link to a public code repository, a demo video of no more than 3 minutes, and a README that explains how to run the project."],
+        ["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]
+      ]
+    },
+    {
+      "id": "FQ03", "lang": "en", "expect": "answer",
+      "question": "How much can I get from a travel grant, and who can apply?",
+      "key_facts": [{"name": "grant cap", "all": ["400"]}, {"name": "distance", "all": ["100"]}],
+      "outdated": [{"name": "travel grant cap", "old": ["300"], "new": ["400"]}],
+      "gold": [
+        ["B01", "Up to 20 travel grants are available for participants who live more than 100 km from the venue."],
+        ["B01", "A grant covers bus or train fares up to RM 300 per participant; flights, taxis and fuel are not covered."],
+        ["B01", "Apply through the travel grant form by 20 December 2026; decisions are emailed by 28 December 2026."],
+        ["B01", "Grants are paid by bank transfer after the event, against original receipts, within 30 days."],
+        ["B02", "The maximum travel grant rises from RM 300 to RM 400 per participant."],
+        ["B02", "The number of grants (up to 20) and the application deadline (20 December 2026) do not change."]
+      ]
+    },
+    {
+      "id": "FQ04", "lang": "en", "expect": "answer",
+      "question": "Which hall is Build Weekend in?",
+      "key_facts": [{"name": "hall", "all": [["hall c", "c厅"]]}],
+      "outdated": [{"name": "hall", "old": [["hall b", "b厅"]], "new": [["hall c", "c厅"]]}],
+      "gold": [
+        ["B02", "Build Weekend moves from Hall B to Hall C in the same building, the DemoClub Learning Centre."],
+        ["B02", "The address does not change."],
+        ["B01", "It takes place in Hall B of the DemoClub Learning Centre, 12 Jalan Contoh, Kuala Lumpur."],
+        ["B04", "The DemoClub Learning Centre is at 12 Jalan Contoh, Kuala Lumpur."],
+        ["B04", "The nearest station is Contoh LRT station, about 400 m from the main entrance."],
+        ["B04", "Buses 23 and 41 stop outside the building."],
+        ["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]
+      ]
+    },
+    {
+      "id": "FQ05", "lang": "en", "expect": "answer",
+      "question": "I can only come on Saturday. Will I get my RM 50 deposit back?",
+      "key_facts": [],
+      "outdated": [],
+      "gold": [
+        ["B01", "The deposit is refunded within 14 days after the event to every participant who checks in on both days."],
+        ["B01", "A participant who misses either day loses the deposit."],
+        ["B01", "A participant who cancels by 9 January 2027 at 23:59 MYT gets the deposit back in full."],
+        ["B01", "After that, the deposit is refunded only with a medical certificate."],
+        ["B03", "两天都签到的参加者，押金会在活动结束后14天内退回。只来一天的，押金不退。"],
+        ["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]
+      ]
+    },
+    {
+      "id": "FQ06", "lang": "en", "expect": "answer",
+      "question": "How long does Build Weekend last in total?",
+      "key_facts": [{"name": "start and end", "all": ["9:00", "17:00"]}],
+      "outdated": [],
+      "gold": [
+        ["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."],
+        ["B01", "Doors open at 08:15 on Saturday and at 08:00 on Sunday."],
+        ["B01", "The building closes at 23:00 on Saturday night, and staying overnight is not allowed."],
+        ["B01", "Saturday | 22:30 | Last call; the hall empties by 23:00"],
+        ["B01", "Sunday | 16:30 | Awards"]
+      ]
+    },
+    {
+      "id": "FQ07", "lang": "en", "expect": "not_in_documents",
+      "question": "Will I get a certificate for taking part?",
+      "key_facts": [],
+      "outdated": [],
+      "gold": []
+    },
+    {
+      "id": "FQ08", "lang": "en", "expect": "answer",
+      "question": "Is there a prize for third place, and how is prize money paid?",
+      "key_facts": [{"name": "payment window", "all": ["30"]}],
+      "outdated": [],
+      "gold": [
+        ["B01", "There is no third-place prize."],
+        ["B01", "Prize money is shared equally among team members and paid by bank transfer within 30 days after the event."],
+        ["B01", "A team can win at most one prize."],
+        ["B01", "First place | RM 3,000"],
+        ["B01", "Second place | RM 1,500"],
+        ["B01", "Best Accessibility Award | RM 500"]
+      ]
+    },
+    {
+      "id": "FZ01", "lang": "zh", "expect": "answer",
+      "question": "我想参加构建周末。活动开始前我要做哪些事？各自的截止时间是什么？",
+      "key_facts": [{"name": "registration deadline", "all": [["1月3日", "3 january", "january 3"], "23:59"]}, {"name": "deposit", "all": ["50"]}],
+      "outdated": [{"name": "travel grant cap", "old": ["300"], "new": ["400"]}],
+      "gold": [
+        ["B01", "Registration opens on 1 December 2026 and closes on 3 January 2027 at 23:59 MYT, or earlier if all 120 places are taken."],
+        ["B01", "Each participant registers individually through the DemoClub event form, even when they already have a team."],
+        ["B03", "每位参加者都要自己填写报名表，并各自交50令吉押金。"],
+        ["B01", "A place is confirmed only after a refundable deposit of RM 50 is paid."],
+        ["B01", "Confirmation emails are sent within 3 working days of payment."],
+        ["B01", "The deposit is refunded within 14 days after the event to every participant who checks in on both days."],
+        ["B01", "A participant who cancels by 9 January 2027 at 23:59 MYT gets the deposit back in full."],
+        ["B01", "Up to 20 travel grants are available for participants who live more than 100 km from the venue."],
+        ["B01", "Apply through the travel grant form by 20 December 2026; decisions are emailed by 28 December 2026."],
+        ["B02", "The maximum travel grant rises from RM 300 to RM 400 per participant."],
+        ["B03", "住处离会场超过100公里的参加者可以申请，每人最多400令吉，只报销巴士或火车票。"],
+        ["B03", "名额最多20个，12月20日前申请。"],
+        ["B01", "Tell us about food allergies in the registration form by 3 January 2027."],
+        ["B01", "Bring your own laptop and charger; DemoClub cannot lend laptops."],
+        ["B01", "Bring your student ID card and the QR code from your confirmation email; both are checked at check-in."],
+        ["B04", "If you need any other support, tell us in the registration form or write to access@democlub.invalid at least 7 days before the event."],
+        ["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."],
+        ["B01", "Doors open at 08:15 on Saturday and at 08:00 on Sunday."],
+        ["B01", "Participants without a team are matched into teams at team formation on Saturday morning."],
+        ["B01", "Saturday | 09:45 | Team formation for people without a team"]
+      ]
+    },
+    {
+      "id": "FZ02", "lang": "zh", "expect": "answer",
+      "question": "项目提交几点截止？",
+      "key_facts": [{"name": "submission deadline", "all": ["14:00"]}],
+      "outdated": [{"name": "submission deadline", "old": ["13:00"], "new": ["14:00"]}],
+      "gold": [
+        ["B02", "Project submission now closes on Sunday 17 January 2027 at 14:00 MYT instead of 13:00."],
+        ["B02", "Demos still start at 14:30."],
+        ["B03", "1月17日（周日）下午2点截止。"],
+        ["B03", "逾期提交的作品不参加评审。"],
+        ["B01", "Late submissions are not judged."],
+        ["B01", "Each team submits one project through the submission page before submission closes."],
+        ["B01", "A submission must include a link to a public code repository, a demo video of no more than 3 minutes, and a README that explains how to run the project."],
+        ["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]
+      ]
+    },
+    {
+      "id": "FZ03", "lang": "zh", "expect": "answer",
+      "question": "交通补助每人最多能拿多少？谁可以申请？",
+      "key_facts": [{"name": "grant cap", "all": ["400"]}, {"name": "distance", "all": ["100"]}],
+      "outdated": [{"name": "travel grant cap", "old": ["300"], "new": ["400"]}],
+      "gold": [
+        ["B01", "Up to 20 travel grants are available for participants who live more than 100 km from the venue."],
+        ["B01", "A grant covers bus or train fares up to RM 300 per participant; flights, taxis and fuel are not covered."],
+        ["B01", "Apply through the travel grant form by 20 December 2026; decisions are emailed by 28 December 2026."],
+        ["B01", "Grants are paid by bank transfer after the event, against original receipts, within 30 days."],
+        ["B02", "The maximum travel grant rises from RM 300 to RM 400 per participant."],
+        ["B02", "The number of grants (up to 20) and the application deadline (20 December 2026) do not change."],
+        ["B03", "住处离会场超过100公里的参加者可以申请，每人最多400令吉，只报销巴士或火车票。"],
+        ["B03", "名额最多20个，12月20日前申请。"]
+      ]
+    },
+    {
+      "id": "FZ04", "lang": "zh", "expect": "answer",
+      "question": "我去年毕业，现在已经不是学生了。还能以参赛者身份参加构建周末吗？",
+      "key_facts": [],
+      "outdated": [],
+      "gold": [
+        ["B01", "Build Weekend is open to currently enrolled university and college students aged 18 or older."],
+        ["B01", "People who graduated in the last 12 months may join as mentors, but not as participants."]
+      ]
+    },
+    {
+      "id": "FZ05", "lang": "zh", "expect": "answer",
+      "question": "评审怎么打分？各项标准各占多少？",
+      "key_facts": [{"name": "weights", "all": ["30", "20"]}],
+      "outdated": [],
+      "gold": [
+        ["B01", "Five judges score every project on four criteria: usefulness (30%), technical execution (30%), design (20%) and presentation (20%)."],
+        ["B01", "A tie is broken by the usefulness score."],
+        ["B01", "Demos are 4 minutes per team, followed by 2 minutes of questions from the judges."]
+      ]
+    },
+    {
+      "id": "FZ06", "lang": "zh", "expect": "answer",
+      "question": "我想开车去，会场附近能停车吗？",
+      "key_facts": [{"name": "nearest car park", "all": ["300"]}],
+      "outdated": [],
+      "gold": [
+        ["B04", "The centre has no visitor parking."],
+        ["B04", "The nearest public car park is at Plaza Contoh, about 300 m away."],
+        ["B04", "DemoClub does not pay for parking."],
+        ["B04", "The nearest station is Contoh LRT station, about 400 m from the main entrance."],
+        ["B04", "Buses 23 and 41 stop outside the building."],
+        ["B04", "The DemoClub Learning Centre is at 12 Jalan Contoh, Kuala Lumpur."]
+      ]
+    },
+    {
+      "id": "FZ07", "lang": "zh", "expect": "not_in_documents",
+      "question": "获奖的奖金需要交税吗？",
+      "key_facts": [],
+      "outdated": [],
+      "gold": [
+        ["B01", "Prize money is shared equally among team members and paid by bank transfer within 30 days after the event."],
+        ["B01", "First place | RM 3,000"],
+        ["B01", "Second place | RM 1,500"],
+        ["B01", "Best Accessibility Award | RM 500"]
+      ]
+    },
+    {
+      "id": "FZ08", "lang": "zh", "expect": "answer",
+      "question": "整个构建周末一共持续多少个小时？",
+      "key_facts": [{"name": "start and end", "all": ["9:00", "17:00"]}],
+      "outdated": [],
+      "gold": [
+        ["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."],
+        ["B01", "Doors open at 08:15 on Saturday and at 08:00 on Sunday."],
+        ["B01", "The building closes at 23:00 on Saturday night, and staying overnight is not allowed."],
+        ["B03", "周六晚上11点闭馆。"],
+        ["B01", "Saturday | 22:30 | Last call; the hall empties by 23:00"],
+        ["B01", "Sunday | 16:30 | Awards"]
+      ]
+    }
+  ],
+  "drafts": [
+    {
+      "id": "DE1", "lang": "en", "kind": "welcome email to registered participants",
+      "text": "Hi everyone, and welcome to Build Weekend 2027! The event runs from Saturday 16 January at 09:00 to Sunday 17 January at 17:00 MYT in Hall B of the DemoClub Learning Centre. Doors open at 08:15 on Saturday. Please bring your laptop and charger, your student ID card and the QR code from your confirmation email. If you forget your laptop, we can lend you one at the front desk. Every participant also receives a Build Weekend T-shirt at check-in. Lunch and dinner are provided on Saturday, and breakfast and lunch on Sunday, with vegetarian and halal options. Remember that the building closes at midnight on Saturday, so you cannot stay overnight. Project submission closes at 14:00 on Sunday, and demos start at 14:30. See you soon!",
+      "items": [
+        {"label": "unsupported", "type": "outdated", "markers": ["hall b"], "gold": [["B01", "It takes place in Hall B of the DemoClub Learning Centre, 12 Jalan Contoh, Kuala Lumpur."]]},
+        {"label": "unsupported", "type": "contradiction", "markers": ["lend you one"], "gold": [["B01", "Bring your own laptop and charger; DemoClub cannot lend laptops."]]},
+        {"label": "unsupported", "type": "invented", "markers": ["build weekend t-shirt"], "gold": []},
+        {"label": "unsupported", "type": "number", "markers": ["midnight"], "gold": [["B01", "The building closes at 23:00 on Saturday night, and staying overnight is not allowed."]]},
+        {"label": "supported", "markers": ["16 january at 09:00"], "gold": [["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]]},
+        {"label": "supported", "markers": ["17 january at 17:00"], "gold": [["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]]},
+        {"label": "supported", "markers": ["08:15"], "gold": [["B01", "Doors open at 08:15 on Saturday and at 08:00 on Sunday."]]},
+        {"label": "supported", "markers": ["laptop and charger"], "gold": [["B01", "Bring your own laptop and charger; DemoClub cannot lend laptops."]]},
+        {"label": "supported", "markers": ["student id card"], "gold": [["B01", "Bring your student ID card and the QR code from your confirmation email; both are checked at check-in."]]},
+        {"label": "supported", "markers": ["breakfast and lunch on sunday"], "gold": [["B01", "Lunch and dinner are provided on Saturday, and breakfast and lunch on Sunday."]]},
+        {"label": "supported", "markers": ["vegetarian and halal"], "gold": [["B01", "All meals include vegetarian and halal options."]]},
+        {"label": "supported", "markers": ["cannot stay overnight"], "gold": [["B01", "The building closes at 23:00 on Saturday night, and staying overnight is not allowed."]]},
+        {"label": "supported", "markers": ["14:00 on sunday"], "gold": [["B02", "Project submission now closes on Sunday 17 January 2027 at 14:00 MYT instead of 13:00."]]},
+        {"label": "supported", "markers": ["demos start at 14:30"], "gold": [["B02", "Demos still start at 14:30."]]}
+      ]
+    },
+    {
+      "id": "DE2", "lang": "en", "kind": "social media post",
+      "text": "Build Weekend 2027 is coming! Two days of building, mentoring and demos on 16–17 January 2027 in Kuala Lumpur. Open to all university and college students, with no age limit. Form a team of 2 to 5 people, or come alone and we'll match you with a team on Saturday morning. A refundable deposit of RM 50 secures your place, and you get it back if you check in on both days. That's 32 hours of non-stop hacking! Prizes: RM 3,000 for first place, RM 1,500 for second and RM 800 for third. Registration closes on 3 January 2027 at 23:59 MYT, and places are limited to 120 participants, so sign up early.",
+      "items": [
+        {"label": "unsupported", "type": "contradiction", "markers": ["no age limit"], "gold": [["B01", "Build Weekend is open to currently enrolled university and college students aged 18 or older."]]},
+        {"label": "unsupported", "type": "number", "markers": ["2 to 5"], "gold": [["B01", "Teams have 2 to 4 members; solo entries are not accepted."]]},
+        {"label": "unsupported", "type": "computed", "markers": ["32 hours"], "gold": [["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]]},
+        {"label": "unsupported", "type": "invented", "markers": ["rm 800"], "gold": [["B01", "There is no third-place prize."]]},
+        {"label": "supported", "markers": ["16–17 january 2027"], "gold": [["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]]},
+        {"label": "supported", "markers": ["kuala lumpur"], "gold": [["B04", "The DemoClub Learning Centre is at 12 Jalan Contoh, Kuala Lumpur."]]},
+        {"label": "supported", "markers": ["match you with a team"], "gold": [["B01", "Participants without a team are matched into teams at team formation on Saturday morning."]]},
+        {"label": "supported", "markers": ["deposit of rm 50"], "gold": [["B01", "A place is confirmed only after a refundable deposit of RM 50 is paid."]]},
+        {"label": "supported", "markers": ["both days"], "gold": [["B01", "The deposit is refunded within 14 days after the event to every participant who checks in on both days."]]},
+        {"label": "supported", "markers": ["rm 3,000"], "gold": [["B01", "First place | RM 3,000"]]},
+        {"label": "supported", "markers": ["rm 1,500"], "gold": [["B01", "Second place | RM 1,500"]]},
+        {"label": "supported", "markers": ["3 january 2027 at 23:59"], "gold": [["B01", "Registration opens on 1 December 2026 and closes on 3 January 2027 at 23:59 MYT, or earlier if all 120 places are taken."]]},
+        {"label": "supported", "markers": ["120 participants"], "gold": [["B01", "There are 120 participant places."]]}
+      ]
+    },
+    {
+      "id": "DE3", "lang": "en", "kind": "support reply about travel grants and the deposit",
+      "text": "Thanks for your question about travel support. If you live more than 100 km from the venue, you can apply for a travel grant of up to RM 300 for bus or train fares. Flights are covered too if no train runs to your city. There are up to 20 grants, the application deadline is 20 December 2026, and we email decisions by 28 December 2026. The grant is paid in cash at check-in. About your deposit: if you cancel by 9 January 2027 at 23:59 MYT, you get your RM 50 back in full. After that date, the deposit is refunded only with a medical certificate. If you attend both days, the deposit comes back within 7 days after the event.",
+      "items": [
+        {"label": "unsupported", "type": "outdated", "markers": ["rm 300"], "gold": [["B01", "A grant covers bus or train fares up to RM 300 per participant; flights, taxis and fuel are not covered."]]},
+        {"label": "unsupported", "type": "contradiction", "markers": ["flights are covered"], "gold": [["B01", "A grant covers bus or train fares up to RM 300 per participant; flights, taxis and fuel are not covered."]]},
+        {"label": "unsupported", "type": "contradiction", "markers": ["in cash"], "gold": [["B01", "Grants are paid by bank transfer after the event, against original receipts, within 30 days."]]},
+        {"label": "unsupported", "type": "number", "markers": ["7 days"], "gold": [["B01", "The deposit is refunded within 14 days after the event to every participant who checks in on both days."]]},
+        {"label": "supported", "markers": ["more than 100 km"], "gold": [["B01", "Up to 20 travel grants are available for participants who live more than 100 km from the venue."]]},
+        {"label": "supported", "markers": ["bus or train fares"], "gold": [["B01", "A grant covers bus or train fares up to RM 300 per participant; flights, taxis and fuel are not covered."]]},
+        {"label": "supported", "markers": ["up to 20 grants"], "gold": [["B02", "The number of grants (up to 20) and the application deadline (20 December 2026) do not change."]]},
+        {"label": "supported", "markers": ["20 december 2026"], "gold": [["B01", "Apply through the travel grant form by 20 December 2026; decisions are emailed by 28 December 2026."]]},
+        {"label": "supported", "markers": ["28 december 2026"], "gold": [["B01", "Apply through the travel grant form by 20 December 2026; decisions are emailed by 28 December 2026."]]},
+        {"label": "supported", "markers": ["9 january 2027 at 23:59"], "gold": [["B01", "A participant who cancels by 9 January 2027 at 23:59 MYT gets the deposit back in full."]]},
+        {"label": "supported", "markers": ["rm 50 back in full"], "gold": [["B01", "A participant who cancels by 9 January 2027 at 23:59 MYT gets the deposit back in full."], ["B01", "A place is confirmed only after a refundable deposit of RM 50 is paid."]]},
+        {"label": "supported", "markers": ["medical certificate"], "gold": [["B01", "After that, the deposit is refunded only with a medical certificate."]]}
+      ]
+    },
+    {
+      "id": "DE4", "lang": "en", "kind": "briefing notes for judges",
+      "text": "Notes for judges. There are five judges, and each project is scored on usefulness (30%), technical execution (30%), design (20%) and presentation (25%). Ties are broken by the presentation score. Each team gives a 4-minute demo followed by 2 minutes of questions. Submissions must include a public code repository, a demo video of up to 5 minutes and a README. Teams may use AI tools as long as they say in the README which ones they used. Projects that were started before the event are welcome if the team declares the existing code. A team can win at most one prize, and there is no third-place prize.",
+      "items": [
+        {"label": "unsupported", "type": "number", "markers": ["presentation (25%)"], "gold": [["B01", "Five judges score every project on four criteria: usefulness (30%), technical execution (30%), design (20%) and presentation (20%)."]]},
+        {"label": "unsupported", "type": "contradiction", "markers": ["broken by the presentation"], "gold": [["B01", "A tie is broken by the usefulness score."]]},
+        {"label": "unsupported", "type": "number", "markers": ["up to 5 minutes"], "gold": [["B01", "A submission must include a link to a public code repository, a demo video of no more than 3 minutes, and a README that explains how to run the project."]]},
+        {"label": "unsupported", "type": "contradiction", "markers": ["started before the event"], "gold": [["B01", "All work must be started at the event."]]},
+        {"label": "supported", "markers": ["five judges"], "gold": [["B01", "Five judges score every project on four criteria: usefulness (30%), technical execution (30%), design (20%) and presentation (20%)."]]},
+        {"label": "supported", "markers": ["usefulness (30%)"], "gold": [["B01", "Five judges score every project on four criteria: usefulness (30%), technical execution (30%), design (20%) and presentation (20%)."]]},
+        {"label": "supported", "markers": ["technical execution (30%)"], "gold": [["B01", "Five judges score every project on four criteria: usefulness (30%), technical execution (30%), design (20%) and presentation (20%)."]]},
+        {"label": "supported", "markers": ["design (20%)"], "gold": [["B01", "Five judges score every project on four criteria: usefulness (30%), technical execution (30%), design (20%) and presentation (20%)."]]},
+        {"label": "supported", "markers": ["4-minute demo"], "gold": [["B01", "Demos are 4 minutes per team, followed by 2 minutes of questions from the judges."]]},
+        {"label": "supported", "markers": ["2 minutes of questions"], "gold": [["B01", "Demos are 4 minutes per team, followed by 2 minutes of questions from the judges."]]},
+        {"label": "supported", "markers": ["public code repository"], "gold": [["B01", "A submission must include a link to a public code repository, a demo video of no more than 3 minutes, and a README that explains how to run the project."]]},
+        {"label": "supported", "markers": ["ai tools"], "gold": [["B01", "Teams may use AI tools, and must state in the README which tools they used and for what."]]},
+        {"label": "supported", "markers": ["at most one prize"], "gold": [["B01", "A team can win at most one prize."]]},
+        {"label": "supported", "markers": ["no third-place prize"], "gold": [["B01", "There is no third-place prize."]]}
+      ]
+    },
+    {
+      "id": "DZ1", "lang": "zh", "kind": "群通知",
+      "text": "各位同学好！构建周末将在2027年1月16日（周六）上午9点开始，1月17日（周日）下午5点结束，地点在 DemoClub 学习中心 Hall C。周六早上8点15分开门。每个人都要自己填写报名表，并交50令吉押金，押金会在活动结束后一个月内退回。报名在2027年1月3日23:59截止，名额满了会提前截止。活动只在线下举行，没有线上参加的方式。周六晚上可以留在会场通宵写代码。每支队伍还会拿到一张100令吉的云服务代金券。请带好笔记本电脑、充电器、学生证和确认邮件里的二维码。",
+      "items": [
+        {"label": "unsupported", "type": "number", "markers": ["一个月内退回"], "gold": [["B01", "The deposit is refunded within 14 days after the event to every participant who checks in on both days."]]},
+        {"label": "unsupported", "type": "contradiction", "markers": ["通宵"], "gold": [["B01", "The building closes at 23:00 on Saturday night, and staying overnight is not allowed."]]},
+        {"label": "unsupported", "type": "invented", "markers": ["代金券"], "gold": []},
+        {"label": "supported", "markers": ["上午9点开始"], "gold": [["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]]},
+        {"label": "supported", "markers": ["下午5点结束"], "gold": [["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]]},
+        {"label": "supported", "markers": ["hall c"], "gold": [["B02", "Build Weekend moves from Hall B to Hall C in the same building, the DemoClub Learning Centre."]]},
+        {"label": "supported", "markers": ["8点15分开门"], "gold": [["B01", "Doors open at 08:15 on Saturday and at 08:00 on Sunday."]]},
+        {"label": "supported", "markers": ["自己填写报名表"], "gold": [["B03", "每位参加者都要自己填写报名表，并各自交50令吉押金。"]]},
+        {"label": "supported", "markers": ["50令吉押金"], "gold": [["B03", "每位参加者都要自己填写报名表，并各自交50令吉押金。"]]},
+        {"label": "supported", "markers": ["2027年1月3日23:59"], "gold": [["B01", "Registration opens on 1 December 2026 and closes on 3 January 2027 at 23:59 MYT, or earlier if all 120 places are taken."]]},
+        {"label": "supported", "markers": ["提前截止"], "gold": [["B01", "Registration opens on 1 December 2026 and closes on 3 January 2027 at 23:59 MYT, or earlier if all 120 places are taken."]]},
+        {"label": "supported", "markers": ["只在线下举行"], "gold": [["B03", "构建周末只在线下举行。"]]},
+        {"label": "supported", "markers": ["学生证"], "gold": [["B01", "Bring your student ID card and the QR code from your confirmation email; both are checked at check-in."]]}
+      ]
+    },
+    {
+      "id": "DZ2", "lang": "zh", "kind": "朋友圈宣传",
+      "text": "DemoClub 构建周末来啦！1月16日到17日，两天线下黑客松，地点在吉隆坡。面向年满18岁的在读大学生，去年毕业的同学也可以组队参赛！一队2到4人，没有队友也没关系，周六上午现场帮你组队。第一名奖金3000令吉，第二名1500令吉，还有500令吉的最佳无障碍设计奖，奖金由队员平分。比赛全程有免费奶茶供应。交通补助每人最多300令吉，住得远的同学别错过！报名1月3日截止，名额只有100个，先到先得。",
+      "items": [
+        {"label": "unsupported", "type": "contradiction", "markers": ["去年毕业"], "gold": [["B01", "People who graduated in the last 12 months may join as mentors, but not as participants."]]},
+        {"label": "unsupported", "type": "invented", "markers": ["奶茶"], "gold": []},
+        {"label": "unsupported", "type": "outdated", "markers": ["最多300令吉"], "gold": [["B01", "A grant covers bus or train fares up to RM 300 per participant; flights, taxis and fuel are not covered."]]},
+        {"label": "unsupported", "type": "number", "markers": ["名额只有100个"], "gold": [["B01", "There are 120 participant places."]]},
+        {"label": "supported", "markers": ["1月16日到17日"], "gold": [["B01", "Build Weekend runs from Saturday 16 January 2027 at 09:00 to Sunday 17 January 2027 at 17:00 MYT."]]},
+        {"label": "supported", "markers": ["吉隆坡"], "gold": [["B04", "The DemoClub Learning Centre is at 12 Jalan Contoh, Kuala Lumpur."]]},
+        {"label": "supported", "markers": ["年满18岁的在读大学生"], "gold": [["B01", "Build Weekend is open to currently enrolled university and college students aged 18 or older."]]},
+        {"label": "supported", "markers": ["2到4人"], "gold": [["B01", "Teams have 2 to 4 members; solo entries are not accepted."]]},
+        {"label": "supported", "markers": ["周六上午现场帮你组队"], "gold": [["B01", "Participants without a team are matched into teams at team formation on Saturday morning."]]},
+        {"label": "supported", "markers": ["3000令吉"], "gold": [["B01", "First place | RM 3,000"]]},
+        {"label": "supported", "markers": ["1500令吉"], "gold": [["B01", "Second place | RM 1,500"]]},
+        {"label": "supported", "markers": ["500令吉的最佳无障碍"], "gold": [["B01", "Best Accessibility Award | RM 500"]]},
+        {"label": "supported", "markers": ["队员平分"], "gold": [["B01", "Prize money is shared equally among team members and paid by bank transfer within 30 days after the event."]]},
+        {"label": "supported", "markers": ["报名1月3日截止"], "gold": [["B01", "Registration opens on 1 December 2026 and closes on 3 January 2027 at 23:59 MYT, or earlier if all 120 places are taken."]]}
+      ]
+    },
+    {
+      "id": "DZ3", "lang": "zh", "kind": "客服回复：提交和评审",
+      "text": "你好！项目提交在1月17日（周日）下午1点截止，逾期提交的作品不参加评审。提交时需要附上公开的代码仓库链接、不超过3分钟的演示视频，以及说明怎么运行项目的README。每支队伍最多可以提交两个项目。可以使用AI工具，但要在README里写明用了哪些工具、用来做什么。评委一共5位，按实用性、技术实现、设计和展示四项打分，其中设计占30%。如果同分，按技术实现得分决定名次。奖金会在活动结束后30天内通过银行转账发放。",
+      "items": [
+        {"label": "unsupported", "type": "outdated", "markers": ["下午1点"], "gold": [["B01", "Sunday | 13:00 | Project submission closes"]]},
+        {"label": "unsupported", "type": "contradiction", "markers": ["两个项目"], "gold": [["B01", "Each team submits one project through the submission page before submission closes."]]},
+        {"label": "unsupported", "type": "number", "markers": ["设计占30%"], "gold": [["B01", "Five judges score every project on four criteria: usefulness (30%), technical execution (30%), design (20%) and presentation (20%)."]]},
+        {"label": "unsupported", "type": "contradiction", "markers": ["按技术实现得分"], "gold": [["B01", "A tie is broken by the usefulness score."]]},
+        {"label": "supported", "markers": ["逾期提交的作品不参加评审"], "gold": [["B03", "逾期提交的作品不参加评审。"]]},
+        {"label": "supported", "markers": ["公开的代码仓库链接"], "gold": [["B01", "A submission must include a link to a public code repository, a demo video of no more than 3 minutes, and a README that explains how to run the project."]]},
+        {"label": "supported", "markers": ["不超过3分钟"], "gold": [["B01", "A submission must include a link to a public code repository, a demo video of no more than 3 minutes, and a README that explains how to run the project."]]},
+        {"label": "supported", "markers": ["ai工具"], "gold": [["B01", "Teams may use AI tools, and must state in the README which tools they used and for what."]]},
+        {"label": "supported", "markers": ["评委一共5位"], "gold": [["B01", "Five judges score every project on four criteria: usefulness (30%), technical execution (30%), design (20%) and presentation (20%)."]]},
+        {"label": "supported", "markers": ["四项打分"], "gold": [["B01", "Five judges score every project on four criteria: usefulness (30%), technical execution (30%), design (20%) and presentation (20%)."]]},
+        {"label": "supported", "markers": ["30天内"], "gold": [["B01", "Prize money is shared equally among team members and paid by bank transfer within 30 days after the event."]]},
+        {"label": "supported", "markers": ["银行转账"], "gold": [["B01", "Prize money is shared equally among team members and paid by bank transfer within 30 days after the event."]]}
+      ]
+    },
+    {
+      "id": "DZ4", "lang": "zh", "kind": "场地与无障碍说明",
+      "text": "会场在 DemoClub 学习中心（12 Jalan Contoh, Kuala Lumpur），离 Contoh 轻轨站大约400米。中心有免费的访客停车场，开车来也很方便。中心门口还有共享单车停放点。北门是无台阶入口，电梯可以到每一层，每层都有无障碍卫生间。安静室在2.04号房间，活动期间全程开放。需要其他协助的话，请至少提前3天写信到 access@democlub.invalid。一楼有40个储物柜，需要自带挂锁。活动期间离开会场再回来时，要在签到台扫二维码。失物会在服务台保管30天。",
+      "items": [
+        {"label": "unsupported", "type": "contradiction", "markers": ["访客停车场"], "gold": [["B04", "The centre has no visitor parking."]]},
+        {"label": "unsupported", "type": "invented", "markers": ["共享单车"], "gold": []},
+        {"label": "unsupported", "type": "number", "markers": ["提前3天"], "gold": [["B04", "If you need any other support, tell us in the registration form or write to access@democlub.invalid at least 7 days before the event."]]},
+        {"label": "supported", "markers": ["12 jalan contoh"], "gold": [["B04", "The DemoClub Learning Centre is at 12 Jalan Contoh, Kuala Lumpur."]]},
+        {"label": "supported", "markers": ["大约400米"], "gold": [["B04", "The nearest station is Contoh LRT station, about 400 m from the main entrance."]]},
+        {"label": "supported", "markers": ["无台阶入口"], "gold": [["B04", "The north entrance is step-free, and a lift serves every floor."]]},
+        {"label": "supported", "markers": ["电梯"], "gold": [["B04", "The north entrance is step-free, and a lift serves every floor."]]},
+        {"label": "supported", "markers": ["无障碍卫生间"], "gold": [["B04", "There are accessible toilets on each floor."]]},
+        {"label": "supported", "markers": ["2.04号房间"], "gold": [["B04", "A quiet room, Room 2.04, is open during all event hours."]]},
+        {"label": "supported", "markers": ["40个储物柜"], "gold": [["B04", "There are 40 lockers on the ground floor, available on a first-come, first-served basis; bring your own padlock."]]},
+        {"label": "supported", "markers": ["自带挂锁"], "gold": [["B04", "There are 40 lockers on the ground floor, available on a first-come, first-served basis; bring your own padlock."]]},
+        {"label": "supported", "markers": ["扫二维码"], "gold": [["B04", "Every time you leave and re-enter the building during the event, scan your QR code at the desk."]]},
+        {"label": "supported", "markers": ["保管30天"], "gold": [["B04", "Lost property is kept at the main desk for 30 days."]]}
+      ]
+    }
+  ]
+}

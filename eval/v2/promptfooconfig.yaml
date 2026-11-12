@@ -1,0 +1,31 @@
+# evidence-check v2 (held-out): plain instruction vs SKILL.md v0.1 vs SKILL.md v0.2.
+# 16 free-answer questions and 8 unsplit drafts against the fictional DemoClub Build Weekend documents.
+# Same model (claude-haiku-5-5, effort medium), documents and JSON output in every arm; the skill arms can
+# run the checking script through a tool. Scoring is done afterwards by score.py (see PREREGISTRATION.md).
+# Run from this folder (EVAL_ENV_FILE is relative to the eval folder):
+#   EVAL_ENV_FILE=<path to .env> PROMPTFOO_DISABLE_TELEMETRY=1 npx -y promptfoo@0.125.1 eval -c promptfooconfig.yaml --no-cache --repeat 2 -o results/run-YYYY-MM-DD.json
+description: evidence-check v2 – plain vs skill v0.1 vs skill v0.2
+
+prompts:
+  - "{{case_id}}"
+
+providers:
+  - id: file://provider.mjs
+    label: plain
+    config:
+      arm: plain
+  - id: file://provider.mjs
+    label: skill-v0.1
+    config:
+      arm: skill
+      version: v0.1
+  - id: file://provider.mjs
+    label: skill-v0.2
+    config:
+      arm: skill
+      version: v0.2
+
+tests: file://tests.mjs
+
+evaluateOptions:
+  maxConcurrency: 3

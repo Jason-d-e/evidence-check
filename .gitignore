@@ -1,0 +1,9 @@
+﻿node_modules/
+__pycache__/
+.env
+.env.*
+*.log
+# Raw promptfoo results hold local paths; the scored summaries and outputs are kept.
+eval/results/*.json
+eval/v2/results/*.json
+!eval/v2/results/*.outputs.json
