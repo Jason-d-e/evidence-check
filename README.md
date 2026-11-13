@@ -7,7 +7,7 @@ An [Agent Skill](https://agentskills.io) that makes an AI back every factual sen
 Answers and drafts written from documents go wrong in small, costly ways: a deadline moves by a day, a duration is worked out instead of copied, a detail appears that no document states. evidence-check has the agent quote its source for every fact, then runs a script that confirms:
 
 1. **the quote is really in the cited file** (case, spacing, curly quotes and punctuation are forgiven);
-2. **every date, time, amount and count in the claim is also in its quotes**, across English and Chinese: `下午2点` matches `14:00`, `五位` matches `Five`, `13:30` does not pass on a quote that says `13:00`.
+2. **every date, time, amount and count in the claim is also in its quotes**, across English and Chinese: `下午2点` matches `14:00`, `五位` matches `Five`, `4.3万` matches `43,000`, `13:30` does not pass on a quote that says `13:00`.
 
 The script cannot judge meaning: a real sentence can be cited for its opposite. So the skill also tells the agent to read every passing claim against its quotes.
 
@@ -66,7 +66,7 @@ Exit code 0 means every claim passed, 1 that at least one did not, 2 that the in
 | A claim with no source | ✓ | | |
 | A real sentence used for its opposite, a dropped condition, a wider scope | | ✓ | |
 | A value replaced by a later document, when the old one is still among the sources | | ✓ in the v2 cases | |
-| Unit conversions (`4.3万` against `43,000`), Roman numerals | | | ✓ |
+| Rounding, sums and conversions (`约 4 万` for `43,000`), Roman numerals: flagged for you to check | | | ✓ |
 
 ## Related tools
 
@@ -80,6 +80,7 @@ Two rounds on fictional documents, Claude Haiku 5.5 with and without the skill, 
 
 - **v1, 84 pre-split sentences.** A plain prompt already got 167 of 168 judgements right; the script caught the one it missed, a duration worked out wrongly ("two hours" for 19:00 to 20:30).
 - **v2, held out: 16 free answers and 8 unsplit drafts.** Every arm flagged all 30 planted errors. The only invented numbers were a calculated "32 hours" (4 of 32 plain answers, none with SKILL.md v0.2), and the script flags each one. Run afterwards on a plain prompt's output, the script also rejected 12 of 150 correct facts, because the quotes were incomplete; with the skill, the agent repairs its quotes and 2 to 3 false alarms remain. The skill costs about three times as much per task.
+- **Script 0.3.0, from real use.** Nine matching rules for false alarms seen on real files (`December 2025`, `三分之一`, `4.3万`, `99.6%` against `0.996`, versioned model names). On 36 new cases fixed before the change, correct claims passed went from 3 of 16 to 16 of 16, and all 17 changed numbers are still flagged; no v1 or v2 result changed.
 
 Full report: [`eval/EVALUATION.md`](eval/EVALUATION.md). The test documents and drafts are synthetic and were written by the same author as the skill.
 
@@ -89,6 +90,7 @@ Full report: [`eval/EVALUATION.md`](eval/EVALUATION.md). The test documents and 
 python -m unittest discover -s tests -v     # offline tests, no model calls
 python eval/script_only.py                  # the script alone on the v1 cases
 python eval/v2/score.py --check             # validate the v2 cases
+python eval/v3/run.py                       # matching rules, script 0.2.0 against current
 ```
 
 The model comparisons use [promptfoo](https://www.promptfoo.dev) and need Node.js and an Anthropic API key in `eval/.env` (`ANTHROPIC_API_KEY=...`); the commands are at the top of each `promptfooconfig.yaml`.

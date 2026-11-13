@@ -36,12 +36,18 @@ Numbers are collected from the claim and from all of its verified quotes, then c
 
 - Digits, including decimals (`4.30` equals `4.3`) and thousands separators (`20,000` equals `20000`).
 - English number words from *two* to *twenty*, the tens, and *hundred*. *One* is not read from a claim, because in prose it is usually a pronoun; in a quote, *one*, *a single*, and *a day/week/month/year/hour* do count as 1.
-- English month names next to a day number (`12 November`, `Nov 12`) add the month number. The verb *may* is never read as May.
+- English month names next to a day number or a year (`12 November`, `Nov 12`, `December 2025`) add the month number. The verb *may* is never read as May.
+- Fractions compare as fractions: `三分之一`, `one-third` and `a third of` are all 1/3; in a quote, `1/3` is too. `a quarter` counts only as `a quarter of`.
+- Scale words multiply the number before them: `4.3万`, `43,000` and `43 thousand` are all 43000; `亿`, `million` and `billion` work the same way. `百` or `千` right before `万` with no numeral in front (`每百万`) and `数百`, `上千` are not numbers.
+- A percentage matches the same value as a decimal: `99.6%` in a claim matches `0.996` in a quote, and the other way round.
+- In a quote, `none` counts as 0. A negated `一` in a claim (`一次都没变`, `没有一次`) is not 1.
+- A name with digits attached (`ranker-v3.2`, `echo-asr-2025-08-28`, `p90`, `B02`) is treated as a name, not a quantity, when it appears in a cited source. Currency codes (`RM4,350`) and quarters or halves of a year (`Q3`, `H1`, `FY2026`) are still amounts and dates.
+- The cited document's own title, from its file name or first heading (`update notice 2`), is a name.
 - Clock times are compared whole: `13:30` is not matched by a quote that has only `13:00` and `14:30`. 12-hour and Chinese times are converted first: `6 pm`, `6.00pm` and `下午6点` all become 18:00, `10点半` becomes 10:30. A bare `3点` counts as a time only after a part of the day (`上午`) or before words such as `前`, `到`, `开始`, `截止`; otherwise it is the number 3.
 - Chinese numerals: `三十` is 30, `两` is 2, `二〇二六` is 2026, `百分之五十` is 50. A lone `一` counts in a claim only before a unit of time or quantity (`一个月`, `一周`, `一次`); words such as `一封`, `统一`, `这一点`, `十分`, `千万` are not read as numbers.
 - A four-digit year (1900–2099) may also come from anywhere in the same source file.
 
-Not converted: units (`4.3万` is not matched to `43,000`), Roman numerals, and spelled-out numbers above *hundred*. Such a claim is reported as "numbers not in the quote"; a person should then compare it by hand.
+Not worked out, on purpose: sums, differences, ratios, rounding (`约 4 万` for 43,000), currency or unit conversions, counts of days between two dates, and counts of listed items. These are numbers the document does not state, so the claim is reported as "numbers not in the quote" and the reader decides whether it is right. Also not read: Roman numerals, spelled-out numbers above *hundred*, and names with a space before the number (`Model 2`).
 
 ## Result order
 

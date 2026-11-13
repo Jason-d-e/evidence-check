@@ -51,6 +51,81 @@ class Base(unittest.TestCase):
         )
 
 
+NOTICE = """# Season notes: update notice 3
+
+Answers were scored with ranker-v3.2.
+Agreement was 0.996.
+Venue hire cost RM 4,350.
+"""
+
+
+class Rules030(Base):
+    """Rules added in 0.3.0 after real use; each passes the right claim and still flags a changed number."""
+
+    def setUp(self):
+        super().setUp()
+        (self.dir / "docs" / "R07-update-notice-3.md").write_text(NOTICE, encoding="utf-8")
+        self.sources = ce.load_sources([str(self.dir / "docs")])
+
+    def test_month_before_a_year_counts_as_the_month(self):
+        self.assertEqual(ce.numbers_in("published in December 2025"), {"12", "2025"})
+        self.assertEqual(ce.numbers_in("You may join"), set())
+
+    def test_fractions_compare_as_fractions(self):
+        self.assertEqual(ce.numbers_in("约三分之一的会员"), {"1/3"})
+        self.assertEqual(ce.numbers_in("about one-third of members"), {"1/3"})
+        self.assertEqual(ce.numbers_in("two thirds"), {"2/3"})
+        self.assertEqual(ce.numbers_in("a quarter of the budget"), {"1/4"})
+        self.assertEqual(ce.numbers_in("paid in a quarter"), set())
+        self.assertIn("1/3", ce.numbers_in("1/3 of the seats", generous=True))
+        self.assertEqual(ce.numbers_in("百分之五十"), {"50"})
+
+    def test_negated_one_is_not_one(self):
+        self.assertEqual(ce.numbers_in("结果一次都没变"), set())
+        self.assertEqual(ce.numbers_in("没有一次失败"), set())
+        self.assertEqual(ce.numbers_in("有一次失败"), {"1"})
+
+    def test_none_in_a_quote_is_zero(self):
+        self.assertIn("0", ce.numbers_in("none of the runs failed", generous=True))
+        self.assertEqual(ce.numbers_in("none of the runs failed"), set())
+
+    def test_hundred_before_wan_without_a_numeral_is_not_a_number(self):
+        self.assertEqual(ce.numbers_in("每百万 token 收费 0.10 美元"), {"0.1"})
+        self.assertEqual(ce.numbers_in("数百人"), set())
+        self.assertEqual(ce.numbers_in("三百人"), {"300"})
+
+    def test_wan_and_million_scale_the_number(self):
+        self.assertEqual(ce.numbers_in("4.3万人"), {"43000"})
+        self.assertEqual(ce.numbers_in("三万人"), {"30000"})
+        self.assertEqual(ce.numbers_in("4.3 million people"), {"4300000"})
+        self.assertEqual(ce.numbers_in("4.3万人", generous=True), {"4.3", "43000"})
+        self.assertEqual(ce.numbers_in("千万不要"), set())
+
+    def test_percent_matches_decimal(self):
+        quote = ("R07-update-notice-3.md", "Agreement was 0.996.")
+        self.assertEqual(self.claim("Agreement was 99.6%.", quote)["status"], "supported")
+        self.assertEqual(self.claim("Agreement was 96.6%.", quote)["missing_numbers"], ["96.6"])
+        self.assertEqual(self.claim("The increase was 0.043.", ("support.txt", "a 4.3 per cent increase"))["status"], "supported")
+
+    def test_name_with_digits_is_a_name_when_a_cited_source_has_it(self):
+        quote = ("R07-update-notice-3.md", "Agreement was 0.996.")
+        self.assertEqual(self.claim("ranker-v3.2 reached an agreement of 0.996.", quote)["status"], "supported")
+        self.assertEqual(self.claim("ranker-v4.1 reached an agreement of 0.996.", quote)["missing_numbers"], ["4.1"])
+        not_in_source = self.claim("ranker-v3.2 is free.", ("workshop.md", "Participation is free."))
+        self.assertEqual(not_in_source["missing_numbers"], ["3.2"])
+        self.assertEqual(ce._names_with_numbers("Q3, FY2026, RM50 and v2"), ["v2"])
+
+    def test_currency_code_before_digits_is_still_an_amount(self):
+        quote = ("R07-update-notice-3.md", "Venue hire cost RM 4,350.")
+        self.assertEqual(self.claim("Venue hire cost RM4,350.", quote)["status"], "supported")
+        self.assertEqual(self.claim("Venue hire cost RM4,530.", quote)["missing_numbers"], ["4530"])
+
+    def test_cited_document_title_is_a_name(self):
+        quote = ("R07-update-notice-3.md", "Agreement was 0.996.")
+        self.assertEqual(self.claim("Update notice 3 says agreement was 0.996.", quote)["status"], "supported")
+        self.assertEqual(self.claim("Update notice 4 says agreement was 0.996.", quote)["missing_numbers"], ["4"])
+
+
 class QuoteMatching(Base):
     def test_exact_quote_is_found_with_line_number(self):
         r = self.claim("The workshop has 24 places.", ("workshop.md", "The capacity is 24 participants."))

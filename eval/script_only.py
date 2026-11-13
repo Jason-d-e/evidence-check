@@ -42,7 +42,7 @@ lines += ["", "| Sentence | Type | Script result | Missing numbers | Text |", "|
 for row in rows:
     lines.append("| " + " | ".join(row) + " |")
 out = "\n".join(lines) + "\n"
-(ROOT / "eval/results/script-only.md").write_text(out, encoding="utf-8")
+(ROOT / "eval/results/script-only.md").write_text(out, encoding="utf-8", newline="\n")
 print("\n".join(lines[:9]))
 for row in rows:
     if (row[1] == "supported") == (row[2] != "supported"):

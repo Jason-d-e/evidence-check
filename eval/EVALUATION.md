@@ -1,6 +1,6 @@
 # evidence-check: evaluation brief
 
-*12 November 2026 · automatic checks on small fictional datasets; this is not an accuracy study*
+*12–13 November 2026 · automatic checks on small fictional datasets; this is not an accuracy study*
 
 ## Question
 
@@ -47,7 +47,21 @@ With the script also run afterwards, the skill arms' invented numbers drop to 0 
 2. **The only invented numbers were a calculated duration.** "32 hours", from Saturday 09:00 to Sunday 17:00 (the building closes overnight): 4 plain answers, 2 with v0.1, none with v0.2, whose instructions say to give the document's own figures. The script flags every one.
 3. **The script on its own is a blunt filter; the skill makes it workable.** The plain prompt often quotes only part of what a claim says, for example a number that sits in the next sentence. Run afterwards, the script then rejected 21 of its 128 answer claims, losing 3 key facts, and 12 correct facts in the drafts. When the model runs the script itself, it repairs most of its quotes before answering (6 to 8 failing claims left instead of 21), and the drafts show 2 to 3 false alarms instead of 12.
 4. **It costs about three times as much.** The skill arms make about two and a half API calls per task and resend the documents each time. v0.2 is 5% cheaper and 20% faster than v0.1, with the same catches and one more false alarm, which is within noise.
-5. **Script false alarms to fix next,** found in this run and not changed after it: a document name with a number in a claim ("update notice 1"), and "two days" inferred from two dates.
+5. **Script false alarms to fix next,** found in this run and not changed after it: a document name with a number in a claim ("update notice 1"), and "two days" inferred from two dates. Script 0.3.0 handles the first; the second stays flagged on purpose (below).
+
+## Script 0.3.0: false alarms from real use
+
+Using the skill on real project files (status pages, research notes, evaluation reports) showed the script flagging correct claims in ways the fictional documents had not: `2025 年 12 月` against `December 2025`, `三分之一` against `one-third`, `一次都没变` read as 1, `4.3万` against `43,000`, `99.6%` against `0.996`, model names with a version or date. Nine matching rules were added. 36 new script-only cases, with their labels, were fixed before the change and recorded in [`v3/PREREGISTRATION.md`](v3/PREREGISTRATION.md).
+
+| 36 claims, no model | 0.2.0 | 0.3.0 |
+|---|---|---|
+| Correct claims passed | 3/16 | **16/16** |
+| Claims with a changed number flagged | 16/17 | **17/17** |
+| True claims with a number the document does not state, flagged on purpose | 3/3 | 3/3 |
+
+The one changed number 0.2.0 missed was `November 2025` for `October 2025`: a month next to a year was not read. On the v1 sentences and v2 draft items with their gold quotes (84 and 105), no result changed ([`v3/results/regression.md`](v3/results/regression.md), a check written after the change). SKILL.md is still v0.2, so the model comparisons above still describe the instructions.
+
+Still flagged on purpose: sums, differences, ratios, rounding, currency conversions, counts of listed items, and day counts worked out from two dates ("a two-day event"). The document does not state these numbers, and accepting worked-out figures would also let through a wrong one like "32 hours"; the reader decides.
 
 ## Limits
 

@@ -2,6 +2,7 @@
 
 Run from the project root:  python -m unittest discover -s tests -v
 """
+import hashlib
 import importlib.util
 import unittest
 from pathlib import Path
@@ -17,10 +18,10 @@ class Cases(unittest.TestCase):
         # Gold quotes exist, markers occur once, a perfect output scores perfectly.
         self.assertEqual(score.check_cases(), [])
 
-    def test_frozen_script_matches_the_skill(self):
+    def test_frozen_script_is_the_one_the_v2_run_used(self):
+        # The script has moved on since v2 (0.3.0); the frozen copy must stay as recorded in PREREGISTRATION.md.
         frozen = (ROOT / "eval" / "v2" / "frozen" / "check_evidence.py").read_bytes()
-        live = (ROOT / "skills" / "evidence-check" / "scripts" / "check_evidence.py").read_bytes()
-        self.assertEqual(frozen, live, "copy the script to eval/v2/frozen/ only before a new run, and say so")
+        self.assertEqual(hashlib.sha256(frozen).hexdigest()[:12], "f820b173a356")
 
 
 class Answers(unittest.TestCase):

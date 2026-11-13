@@ -26,9 +26,10 @@ import json
 import re
 import sys
 import unicodedata
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 TEXT_EXTENSIONS = {
     ".md", ".markdown", ".txt", ".rst", ".csv", ".tsv", ".json", ".jsonl",
@@ -202,6 +203,10 @@ CN_NOT_NUMBERS = [
     r"一(?=[些样直定般切起共致旦边下律概并])", r"零(?=[基门成风距])",
     r"(?:周|星期|礼拜)[一二三四五六七日天]",  # weekdays: 周五 is Friday, not 5
     r"二维码", r"三明治", r"四处", r"十字",  # QR code, sandwich, everywhere, cross
+    r"(?:没有|没|无|未)一(?=[次个件条项处位名回])",  # 没有一次: not once
+    r"一[次个件条项处位名回]?(?=[都也](?:没|不|未|无))",  # 一次都没变: never changed
+    r"(?<![零〇一二两三四五六七八九十\d.])[百千](?=[万亿])",  # 每百万: per million
+    r"(?<=[数几上成])[百千]",  # 数百, 上千: hundreds, thousands
 ]
 
 
@@ -289,18 +294,78 @@ def _canonical(token: str) -> str:
     return str(int(token))
 
 
+def _canon_dec(value: Decimal) -> str:
+    return _canonical(format(value.normalize(), "f"))
+
+
+# Fractions compare as fractions: 三分之一, one-third and (in a quote) 1/3 are all "1/3".
+EN_NUMERATORS = {"a": 1, "an": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+                 "six": 6, "seven": 7, "eight": 8, "nine": 9}
+EN_DENOMINATORS = {"half": 2, "halves": 2, "third": 3, "thirds": 3, "quarter": 4, "quarters": 4,
+                   "fourth": 4, "fourths": 4, "fifth": 5, "fifths": 5, "sixth": 6, "sixths": 6,
+                   "eighth": 8, "eighths": 8, "tenth": 10, "tenths": 10}
+CN_FRACTION_RE = re.compile(r"([零〇一二两三四五六七八九十百\d]+)分之([零〇一二两三四五六七八九十\d]+)")
+EN_FRACTION_RE = re.compile(
+    r"\b(one|two|three|four|five|six|seven|eight|nine|an?)[\s-]+(" + "|".join(EN_DENOMINATORS) + r")\b", re.I)
+# 万, 亿, thousand, million and billion scale the number before them: 4.3万 = 43,000.
+SCALES = {"万": 10_000, "亿": 100_000_000, "thousand": 1_000, "million": 1_000_000, "billion": 1_000_000_000}
+SCALE_RE = re.compile(r"(\d+(?:\.\d+)?)\s*(万|亿|thousand\b|million\b|billion\b)", re.I)
+PERCENT_RE = re.compile(r"(\d+(?:\.\d+)?)\s*(?:%|percent\b|per cent\b)", re.I)
+
+
+def _cn_or_digits(s: str) -> int:
+    return int(s) if s.isdigit() else _cn_to_int(s)
+
+
+def _take_fractions(t: str, generous: bool, fractions: set) -> str:
+    def cn(m: re.Match) -> str:
+        if m.group(1) == "百":
+            return m.group(0)  # 百分之 is a percentage, handled elsewhere
+        fractions.add(f"{_cn_or_digits(m.group(2))}/{_cn_or_digits(m.group(1))}")
+        return " "
+
+    def en(m: re.Match) -> str:
+        num = m.group(1).lower()
+        if num in ("a", "an") and not re.match(r"\s+of\b", m.string[m.end():m.end() + 4], re.I):
+            return m.group(0)  # "a quarter" alone may be three months; "a quarter of" is 1/4
+        fractions.add(f"{EN_NUMERATORS[num]}/{EN_DENOMINATORS[m.group(2).lower()]}")
+        return " "
+
+    t = CN_FRACTION_RE.sub(cn, t)
+    t = EN_FRACTION_RE.sub(en, t)
+    if generous:
+        for a, b in re.findall(r"(?<![\d/.])(\d{1,2})/(\d{1,2})(?![\d/])", t):
+            fractions.add(f"{int(a)}/{int(b)}")
+    return t
+
+
+def _scale(t: str, generous: bool) -> str:
+    def repl(m: re.Match) -> str:
+        try:
+            value = Decimal(m.group(1)) * SCALES[m.group(2).lower()]
+        except InvalidOperation:
+            return m.group(0)
+        scaled = format(value.normalize(), "f")
+        return f" {m.group(1)} {scaled} " if generous else f" {scaled} "
+
+    return SCALE_RE.sub(repl, t)
+
+
 def numbers_in(text: str, generous: bool = False) -> set:
     """Every number a sentence states, in a form that can be compared across languages.
 
     Claims are read strictly. Quotes are read generously (`generous=True`): "one",
-    "a week" and a lone 一 also count as 1, so a claim is not flagged just because
+    "a week", "none" and a lone 一 also count, so a claim is not flagged just because
     its source wrote the number as a word.
     """
     t = unicodedata.normalize("NFKC", text)
+    fractions = set()
+    t = _take_fractions(t, generous, fractions)
     t = _convert_chinese_numerals(t, generous)
     t = _to_24h(t)
     t = _zh_clock(t)
     t = re.sub(r"(?<=\d),(?=\d{3}(?!\d))", "", t)  # 20,000 -> 20000
+    t = _scale(t, generous)
     times = set()
 
     def take_time(m: re.Match) -> str:
@@ -311,17 +376,75 @@ def numbers_in(text: str, generous: bool = False) -> set:
         return " "
 
     t = TIME_RE.sub(take_time, t)
-    found = {_canonical(n) for n in re.findall(r"\d+(?:\.\d+)?", t)} | times
+    found = {_canonical(n) for n in re.findall(r"\d+(?:\.\d+)?", t)} | times | fractions
     low = t.lower()
     for word in re.findall(r"[a-z]+", low):
         if word in EN_NUMBER_WORDS:
             found.add(str(EN_NUMBER_WORDS[word]))
     if generous and re.search(r"\b(?:one|single|an?\s+(?:day|week|month|year|hour|minute|time|person|place))\b", low):
         found.add("1")
-    # Month names count only next to a day number, so the verb "may" is never May.
-    for m in re.finditer(rf"\b\d{{1,2}}(?:st|nd|rd|th)?\s+(?:of\s+)?({MONTH_RE})\b|\b({MONTH_RE})\.?\s+\d{{1,2}}\b", low):
-        found.add(str(MONTHS[m.group(1) or m.group(2)]))
+    if generous and re.search(r"\bnone\b", low):
+        found.add("0")
+    # Month names count only next to a day number or a year, so the verb "may" is never May.
+    for m in re.finditer(rf"\b\d{{1,2}}(?:st|nd|rd|th)?\s+(?:of\s+)?({MONTH_RE})\b"
+                         rf"|\b({MONTH_RE})\.?\s+\d{{1,2}}\b"
+                         rf"|\b({MONTH_RE})\.?,?\s+(?:19|20)\d\d\b", low):
+        found.add(str(MONTHS[m.group(1) or m.group(2) or m.group(3)]))
     return found
+
+
+def percents_in(text: str) -> set:
+    """Numbers written as percentages (99.6%, 百分之五十), so a claim's 99.6% can match a quote's 0.996."""
+    t = _convert_chinese_numerals(unicodedata.normalize("NFKC", text), generous=True)
+    return {_canonical(n) for n in PERCENT_RE.findall(t)}
+
+
+# A name with digits attached (ranker-v3.2, echo-asr-2025-08-28, p90, B02) is a name,
+# not a quantity, when it also appears in a cited source. Currency codes (RM4,350) and
+# quarters or halves of a year (Q3, H1, FY2026) stay numbers.
+IDENTIFIER_RE = re.compile(r"(?<![A-Za-z0-9])[A-Za-z][A-Za-z0-9]*(?:[-_.][A-Za-z0-9]+)*(?![A-Za-z0-9])")
+NUMBER_PREFIXES = {"rm", "rmb", "myr", "usd", "us", "sgd", "hkd", "hk", "aud", "eur", "gbp", "cny", "jpy",
+                   "cad", "nzd", "inr", "rs", "nt", "q", "h", "fy"}
+
+
+def _names_with_numbers(text: str) -> list:
+    out = []
+    for m in IDENTIFIER_RE.finditer(unicodedata.normalize("NFKC", text)):
+        token = m.group(0)
+        prefix = re.match(r"[A-Za-z]+", token).group(0).lower()
+        if any(ch.isdigit() for ch in token) and not (prefix in NUMBER_PREFIXES and token[len(prefix):][:1].isdigit()):
+            out.append(token)
+    return out
+
+
+def _title_phrases(src) -> set:
+    """The cited document's own name, from its file name and first heading: 'update notice 2'."""
+    stem = re.sub(r"^[A-Za-z]*\d+[-_ ]+", "", Path(src.id).stem)
+    names = {re.sub(r"[-_]+", " ", stem)}
+    heading = re.search(r"^#{1,6}\s+(.+?)\s*$", src.text, re.M)
+    if heading:
+        names.add(heading.group(1))
+        names.add(heading.group(1).rsplit(":", 1)[-1])
+    phrases = set()
+    for name in names:
+        name = " ".join(unicodedata.normalize("NFKC", name).lower().split())
+        if re.search(r"\d", name) and re.search(r"[a-z一-鿿]", name):
+            phrases.add(name)
+    return phrases
+
+
+def _without_names(text: str, cited) -> str:
+    """The claim with cited documents' titles and names-with-digits that the sources contain taken out."""
+    t = unicodedata.normalize("NFKC", text)
+    for src in cited:
+        for phrase in _title_phrases(src):
+            pattern = r"[\s_-]+".join(re.escape(w) for w in phrase.split())
+            t = re.sub(r"(?<![A-Za-z0-9])" + pattern + r"(?![A-Za-z0-9])", " ", t, flags=re.I)
+    haystack = " ".join(unicodedata.normalize("NFKC", s.text).lower() + " " + s.id.lower() for s in cited)
+    for token in _names_with_numbers(t):
+        if re.search(r"(?<![a-z0-9])" + re.escape(token.lower()) + r"(?![a-z0-9])", haystack):
+            t = re.sub(r"(?<![A-Za-z0-9])" + re.escape(token) + r"(?![A-Za-z0-9])", " ", t)
+    return t
 
 
 # ---------------------------------------------------------------- loading
@@ -383,10 +506,22 @@ def load_claims(path):
 
 # ---------------------------------------------------------------- checking
 
+def _same_as_percent(n, claim_percents, quote_numbers, quote_percents) -> bool:
+    """99.6% in a claim matches 0.996 in a quote, and 0.996 matches 99.6%."""
+    if "/" in n or ":" in n:
+        return False
+    d = Decimal(n)
+    if n in claim_percents and _canon_dec(d / 100) in quote_numbers:
+        return True
+    return d < 1 and _canon_dec(d * 100) in quote_percents
+
+
 def check_claim(claim, sources):
     problems = set()
     evidence_out = []
     quote_numbers = set()
+    quote_percents = set()
+    cited = []
     years_in_sources = set()
     for e in claim.get("evidence", []):
         quote = str(e.get("quote", ""))
@@ -401,6 +536,9 @@ def check_claim(claim, sources):
             if match:
                 item.update(found=True, match=match, line=line, source=src.id)
                 quote_numbers |= numbers_in(quote, generous=True)
+                quote_percents |= percents_in(quote)
+                if src not in cited:
+                    cited.append(src)
                 years_in_sources |= set(re.findall(r"(?<!\d)(?:19|20)\d\d(?!\d)", unicodedata.normalize("NFKC", src.text)))
             else:
                 problems.add("quote_not_found")
@@ -411,11 +549,15 @@ def check_claim(claim, sources):
 
     missing = []
     if not problems:
-        for n in sorted(numbers_in(claim["text"]), key=lambda x: (len(x), x)):
+        claim_text = _without_names(claim["text"], cited)
+        claim_percents = percents_in(claim_text)
+        for n in sorted(numbers_in(claim_text), key=lambda x: (len(x), x)):
             if n in quote_numbers:
                 continue
             if re.fullmatch(r"(19|20)\d\d", n) and n in years_in_sources:
                 continue  # documents often state the year once, away from the date
+            if _same_as_percent(n, claim_percents, quote_numbers, quote_percents):
+                continue
             missing.append(n)
         if missing:
             problems.add("numbers_not_in_quote")
