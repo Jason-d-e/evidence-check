@@ -126,6 +126,83 @@ class Rules030(Base):
         self.assertEqual(self.claim("Update notice 4 says agreement was 0.996.", quote)["missing_numbers"], ["4"])
 
 
+RULES_ZH = """# 评分规则
+
+## 第 6 条 截止时间
+
+作品要在周日下午 2 点前提交。
+
+## 第 7 条 迟交
+
+迟交的作品不参加评审。
+
+## Results
+
+Agreement was 0.314. The refusal rate was 16.5%. The sample held 123 answers. Membership reached 85,252 people.
+Scoring started at 22:18:30.
+Just under a third (8 of 25) were rejected. Results are published once a quarter.
+SigLIP 2 was the image model. It found 5 violations.
+“一次提示词”组只看广告本身。这一组拦下了 30 条。
+"""
+
+
+class Rules040(Base):
+    """Rules added in 0.4.0 after real use; each passes the right claim and still flags a changed one."""
+
+    def setUp(self):
+        super().setUp()
+        (self.dir / "docs" / "rules.md").write_text(RULES_ZH, encoding="utf-8")
+        self.sources = ce.load_sources([str(self.dir / "docs")])
+
+    def test_rounding_keeps_two_significant_digits_and_is_reported(self):
+        quote = ("rules.md", "Agreement was 0.314.")
+        r = self.claim("Agreement was 0.31.", quote)
+        self.assertEqual(r["status"], "supported")
+        self.assertEqual(r["rounded"], [{"claim": "0.31", "quote": "0.314"}])
+        self.assertEqual(self.claim("Agreement was 0.32.", quote)["missing_numbers"], ["0.32"])
+        self.assertEqual(self.claim("Agreement was 0.3.", quote)["missing_numbers"], ["0.3"])
+        self.assertEqual(self.claim("The refusal rate was 17%.", ("rules.md", "The refusal rate was 16.5%."))["status"], "supported")
+
+    def test_rounding_never_turns_an_integer_into_tens(self):
+        self.assertEqual(self.claim("The sample held 120 answers.", ("rules.md", "The sample held 123 answers."))["missing_numbers"], ["120"])
+
+    def test_rounding_with_wan(self):
+        quote = ("rules.md", "Membership reached 85,252 people.")
+        self.assertEqual(self.claim("会员约 8.5 万人。", quote)["rounded"], [{"claim": "85000", "quote": "85252"}])
+        self.assertEqual(self.claim("会员约 9 万人。", quote)["missing_numbers"], ["90000"])
+
+    def test_rounded_match_is_shown_in_the_report(self):
+        report = ce.check([{"id": "1", "text": "Agreement was 0.31.", "evidence": [{"source": "rules.md", "quote": "Agreement was 0.314."}]}], self.sources)
+        self.assertIn("四舍五入后对上: 0.31 ← 0.314", ce.render(report, "markdown", "zh"))
+
+    def test_ordinal_in_the_heading_above_the_quote_is_a_name(self):
+        quote = ("rules.md", "作品要在周日下午 2 点前提交。")
+        self.assertEqual(self.claim("第 6 条规定作品要在周日下午 2 点前提交。", quote)["status"], "supported")
+        self.assertEqual(self.claim("第六条规定作品要在周日下午 2 点前提交。", quote)["status"], "supported")
+        # 第 7 条 is in the same document, but not above this quote.
+        self.assertEqual(self.claim("第 7 条规定作品要在周日下午 2 点前提交。", quote)["missing_numbers"], ["7"])
+
+    def test_quoted_name_in_the_source_is_a_name(self):
+        quote = ("rules.md", "这一组拦下了 30 条。")
+        self.assertEqual(self.claim("“一次提示词”组拦下了 30 条。", quote)["status"], "supported")
+        self.assertEqual(self.claim("“两次提示词”组拦下了 30 条。", quote)["missing_numbers"], ["2"])
+
+    def test_a_third_without_of_is_a_fraction_but_a_quarter_is_not(self):
+        self.assertEqual(self.claim("不到三分之一被拒绝。", ("rules.md", "Just under a third (8 of 25) were rejected."))["status"], "supported")
+        self.assertEqual(self.claim("四分之一的结果已公布。", ("rules.md", "Results are published once a quarter."))["missing_numbers"], ["1/4"])
+
+    def test_quote_time_with_seconds_also_gives_the_minute(self):
+        quote = ("rules.md", "Scoring started at 22:18:30.")
+        self.assertEqual(self.claim("Scoring started at 22:18.", quote)["status"], "supported")
+        self.assertEqual(self.claim("Scoring started at 22:18:45.", quote)["missing_numbers"], ["22:18:45"])
+        self.assertEqual(ce.numbers_in("at 22:18:30"), {"22:18:30"})
+
+    def test_mixed_case_name_with_a_spaced_version(self):
+        quote = ("rules.md", "It found 5 violations.")
+        self.assertEqual(self.claim("SigLIP 2 found 5 violations.", quote)["status"], "supported")
+        self.assertEqual(self.claim("SigLIP 3 found 5 violations.", quote)["missing_numbers"], ["3"])
+
+
 class QuoteMatching(Base):
     def test_exact_quote_is_found_with_line_number(self):
         r = self.claim("The workshop has 24 places.", ("workshop.md", "The capacity is 24 participants."))

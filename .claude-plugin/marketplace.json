@@ -9,7 +9,7 @@
       "name": "evidence-check",
       "source": "./",
       "description": "Makes an AI back every factual sentence with a word-for-word quote from your own documents. Answer a question from sources or check a draft claim by claim; a bundled script confirms each quote is really in the cited file and that every date, time and number in a claim is also in its quote.",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "repository": "https://github.com/Jason-d-e/evidence-check",
       "license": "MIT",
       "keywords": [

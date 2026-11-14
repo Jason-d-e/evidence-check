@@ -63,6 +63,18 @@ The one changed number 0.2.0 missed was `November 2025` for `October 2025`: a mo
 
 Still flagged on purpose: sums, differences, ratios, rounding, currency conversions, counts of listed items, and day counts worked out from two dates ("a two-day event"). The document does not state these numbers, and accepting worked-out figures would also let through a wrong one like "32 hours"; the reader decides.
 
+## Script 0.4.0: rounding and names
+
+After 0.3.0, use on real files still showed correct claims flagged, most often for rounding (`0.31` for `0.314`, `17%` for `16.5%`), and for ordinals (`第 6 条`), quoted group names, `a third` without `of`, times with seconds and names such as `SigLIP 2`. Six rules were added. 28 new script-only cases, with their labels, were fixed before the change and recorded in [`v4/PREREGISTRATION.md`](v4/PREREGISTRATION.md).
+
+| 28 claims, no model | 0.3.0 | 0.4.0 |
+|---|---|---|
+| Correct claims passed | 0/11 | **11/11** |
+| Claims with a changed number or name flagged | 13/13 | 13/13 |
+| True claims rounded to one significant digit or worked out, flagged on purpose | 4/4 | 4/4 |
+
+Rounding changes what the section above leaves flagged: a claim's number now also matches a more precise number in its quotes that rounds to it, if the claim keeps at least two significant digits, and the report lists each rounded match. `0.3` for `0.314`, `120` for `123` and `约 4 万` for `43,000` are still flagged; sums, ratios and conversions still are too. An ordinal counts as a name only when it is in the quote's paragraph or the heading above it, so a rule quoted from under `第 6 条` and cited as `第 7 条` is still flagged. The v3 results are unchanged, and no v1 sentence or v2 draft item changed result ([`v3/results/regression.md`](v3/results/regression.md)).
+
 ## Limits
 
 - The documents and drafts are synthetic and were written by the same author as the skill, with the labels fixed when the cases were written. Planted errors may be easier to spot than real ones.

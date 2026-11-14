@@ -26,10 +26,10 @@ import json
 import re
 import sys
 import unicodedata
-from decimal import Decimal, InvalidOperation
+from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from pathlib import Path
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 TEXT_EXTENSIONS = {
     ".md", ".markdown", ".txt", ".rst", ".csv", ".tsv", ".json", ".jsonl",
@@ -68,6 +68,7 @@ LABELS = {
         "no_evidence": "No evidence given",
         "numbers_not_in_quote": "Numbers not in the quote",
         "missing": "missing numbers",
+        "rounded": "matched after rounding",
         "line": "line",
         "loose": "matched after ignoring punctuation",
         "summary": "{ok} of {n} claims supported; {bad} not supported.",
@@ -81,6 +82,7 @@ LABELS = {
         "no_evidence": "没有给出依据",
         "numbers_not_in_quote": "数字在引文里找不到",
         "missing": "找不到的数字",
+        "rounded": "四舍五入后对上",
         "line": "第 {n} 行",
         "loose": "忽略标点后对上",
         "summary": "{n} 条说法中 {ok} 条有依据，{bad} 条没有。",
@@ -283,6 +285,7 @@ def _zh_clock(text: str) -> str:
 # A clock time is compared as one token, so 13:30 does not pass on a quote that
 # only has 13:00 and 14:30.
 TIME_RE = re.compile(r"(?<![\d:])(\d{1,2}):(\d{2})(?![\d:])")
+SECONDS_RE = re.compile(r"(?<![\d:])(\d{1,2}):(\d{2}):(\d{2})(?![\d:])")
 
 
 def _canonical(token: str) -> str:
@@ -326,8 +329,10 @@ def _take_fractions(t: str, generous: bool, fractions: set) -> str:
 
     def en(m: re.Match) -> str:
         num = m.group(1).lower()
-        if num in ("a", "an") and not re.match(r"\s+of\b", m.string[m.end():m.end() + 4], re.I):
-            return m.group(0)  # "a quarter" alone may be three months; "a quarter of" is 1/4
+        den = m.group(2).lower()
+        if num in ("a", "an") and den in ("quarter", "quarters", "half", "halves") and \
+                not re.match(r"\s+of\b", m.string[m.end():m.end() + 4], re.I):
+            return m.group(0)  # "once a quarter" is three months, "a half" may be time; "a quarter of" is 1/4
         fractions.add(f"{EN_NUMERATORS[num]}/{EN_DENOMINATORS[m.group(2).lower()]}")
         return " "
 
@@ -375,6 +380,16 @@ def numbers_in(text: str, generous: bool = False) -> set:
         times.add(f"{hour}:{minute:02d}")
         return " "
 
+    def take_seconds(m: re.Match) -> str:
+        hour, minute, second = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        if hour > 24 or minute > 59 or second > 59:
+            return m.group(0)
+        times.add(f"{hour}:{minute:02d}:{second:02d}")
+        if generous:
+            times.add(f"{hour}:{minute:02d}")  # 22:18:30 in a quote also says 22:18
+        return " "
+
+    t = SECONDS_RE.sub(take_seconds, t)
     t = TIME_RE.sub(take_time, t)
     found = {_canonical(n) for n in re.findall(r"\d+(?:\.\d+)?", t)} | times | fractions
     low = t.lower()
@@ -433,17 +448,60 @@ def _title_phrases(src) -> set:
     return phrases
 
 
-def _without_names(text: str, cited) -> str:
-    """The claim with cited documents' titles and names-with-digits that the sources contain taken out."""
+def _context_of(src, line: int) -> str:
+    """The paragraph that holds a quote's first line, with the nearest heading above it."""
+    lines = src.text.splitlines()
+    i = max(0, min(line - 1, len(lines) - 1))
+    start, end = i, i
+    while start > 0 and lines[start - 1].strip():
+        start -= 1
+    while end + 1 < len(lines) and lines[end + 1].strip():
+        end += 1
+    heading = next((lines[j] for j in range(start - 1, -1, -1) if re.match(r"\s*#{1,6}\s", lines[j])), "")
+    return unicodedata.normalize("NFKC", "\n".join([heading] + lines[start:end + 1]))
+
+
+# Chinese ordinals: 第 6 条, 第二轮, 第四遍. One is a name, not a quantity, when the same ordinal
+# is in the quote's paragraph or the heading above it (a rule quoted from under "第 6 条").
+ORDINAL_RE = re.compile(r"第\s*([零〇一二两三四五六七八九十百]+|\d+)\s*(?=([一-鿿]))")
+# A quoted name in a claim: “一次提示词”组, "strict-v2".
+QUOTED_RE = re.compile(r"[“\"「『`]([^“”\"「」『』`\n]{1,30})[”\"」』`]")
+# A mixed-case or all-capital name and a version after a space: SigLIP 2, GPT 4.
+SPACED_NAME_RE = re.compile(r"(?<![A-Za-z0-9])([A-Za-z]*[a-z][A-Z][A-Za-z]*|[A-Z][A-Z0-9]+)\s+(\d+(?:\.\d+)?)(?![\d.,:/%])")
+NOT_SPACED_NAMES = {"am", "pm", "myt", "utc", "gmt"} | set(MONTHS)
+
+
+def _ordinals(text: str) -> set:
+    return {f"{_cn_or_digits(m.group(1))}{m.group(2)}" for m in ORDINAL_RE.finditer(text)}
+
+
+def _without_names(text: str, cited, contexts=()) -> str:
+    """The claim with names taken out, so their digits are not compared as quantities.
+
+    Taken out: the cited documents' titles; names with digits (ranker-v3.2, SigLIP 2) and
+    quoted names that a cited source contains; ordinals that the quote's paragraph or the
+    heading above it contains.
+    """
     t = unicodedata.normalize("NFKC", text)
     for src in cited:
         for phrase in _title_phrases(src):
             pattern = r"[\s_-]+".join(re.escape(w) for w in phrase.split())
             t = re.sub(r"(?<![A-Za-z0-9])" + pattern + r"(?![A-Za-z0-9])", " ", t, flags=re.I)
     haystack = " ".join(unicodedata.normalize("NFKC", s.text).lower() + " " + s.id.lower() for s in cited)
+    flat = " ".join(haystack.split())
+
+    def in_sources(phrase: str) -> bool:
+        return " ".join(phrase.lower().split()) in flat
+
+    t = QUOTED_RE.sub(lambda m: " " if in_sources(m.group(1)) else m.group(0), t)
+    t = SPACED_NAME_RE.sub(
+        lambda m: " " if (m.group(1).lower() not in NUMBER_PREFIXES | NOT_SPACED_NAMES and in_sources(m.group(0)))
+        else m.group(0), t)
     for token in _names_with_numbers(t):
         if re.search(r"(?<![a-z0-9])" + re.escape(token.lower()) + r"(?![a-z0-9])", haystack):
             t = re.sub(r"(?<![A-Za-z0-9])" + re.escape(token) + r"(?![A-Za-z0-9])", " ", t)
+    nearby = set().union(*(_ordinals(c) for c in contexts)) if contexts else set()
+    t = ORDINAL_RE.sub(lambda m: " " if f"{_cn_or_digits(m.group(1))}{m.group(2)}" in nearby else m.group(0), t)
     return t
 
 
@@ -506,6 +564,48 @@ def load_claims(path):
 
 # ---------------------------------------------------------------- checking
 
+NUMBER_WITH_UNIT_RE = re.compile(
+    r"(?<![\d.:/])(\d+(?:\.(\d+))?)(?:\s*(万|亿|thousand\b|million\b|billion\b))?(?![\d:/])", re.I)
+
+
+def _number_steps(text: str) -> dict:
+    """For each number the claim states, the step it is written to and its significant digits.
+
+    0.31 is written to 0.01 (2 digits), 156 to 1 (3 digits), 8.5万 to 1000 (2 digits).
+    """
+    t = _convert_chinese_numerals(unicodedata.normalize("NFKC", text))
+    t = re.sub(r"(?<=\d),(?=\d{3}(?!\d))", "", t)
+    steps = {}
+    for m in NUMBER_WITH_UNIT_RE.finditer(t):
+        mantissa, frac, unit = m.group(1), m.group(2) or "", m.group(3)
+        scale = SCALES[unit.lower()] if unit else 1
+        digits = mantissa.replace(".", "").lstrip("0")
+        steps[_canon_dec(Decimal(mantissa) * scale)] = (Decimal(1).scaleb(-len(frac)) * scale, len(digits))
+    return steps
+
+
+def _rounded_from(n, steps, quote_numbers):
+    """The quote number that rounds to the claim's n at the precision the claim uses, if any.
+
+    0.31 matches 0.314 and 17% matches 16.5%, but only when the claim keeps at least two
+    significant digits (0.3 for 0.314 stays flagged), and never by rounding an integer to
+    tens (120 does not match 123).
+    """
+    if n not in steps or "/" in n or ":" in n:
+        return None
+    step, significant = steps[n]
+    if significant < 2:
+        return None
+    target = Decimal(n)
+    for q in sorted(quote_numbers):
+        if "/" in q or ":" in q:
+            continue
+        value = Decimal(q)
+        if value != target and (value / step).quantize(Decimal(1), rounding=ROUND_HALF_UP) * step == target:
+            return q
+    return None
+
+
 def _same_as_percent(n, claim_percents, quote_numbers, quote_percents) -> bool:
     """99.6% in a claim matches 0.996 in a quote, and 0.996 matches 99.6%."""
     if "/" in n or ":" in n:
@@ -522,6 +622,7 @@ def check_claim(claim, sources):
     quote_numbers = set()
     quote_percents = set()
     cited = []
+    contexts = []  # the paragraph around each found quote and the heading above it
     years_in_sources = set()
     for e in claim.get("evidence", []):
         quote = str(e.get("quote", ""))
@@ -539,6 +640,7 @@ def check_claim(claim, sources):
                 quote_percents |= percents_in(quote)
                 if src not in cited:
                     cited.append(src)
+                contexts.append(_context_of(src, line))
                 years_in_sources |= set(re.findall(r"(?<!\d)(?:19|20)\d\d(?!\d)", unicodedata.normalize("NFKC", src.text)))
             else:
                 problems.add("quote_not_found")
@@ -548,15 +650,21 @@ def check_claim(claim, sources):
         problems.add("no_evidence")
 
     missing = []
+    rounded = []
     if not problems:
-        claim_text = _without_names(claim["text"], cited)
+        claim_text = _without_names(claim["text"], cited, contexts)
         claim_percents = percents_in(claim_text)
+        claim_steps = _number_steps(claim_text)
         for n in sorted(numbers_in(claim_text), key=lambda x: (len(x), x)):
             if n in quote_numbers:
                 continue
             if re.fullmatch(r"(19|20)\d\d", n) and n in years_in_sources:
                 continue  # documents often state the year once, away from the date
             if _same_as_percent(n, claim_percents, quote_numbers, quote_percents):
+                continue
+            source_number = _rounded_from(n, claim_steps, quote_numbers)
+            if source_number is not None:
+                rounded.append({"claim": n, "quote": source_number})
                 continue
             missing.append(n)
         if missing:
@@ -569,6 +677,7 @@ def check_claim(claim, sources):
         "status": status,
         "problems": sorted(problems, key=STATUS_ORDER.index),
         "missing_numbers": missing,
+        "rounded": rounded,
         "evidence": evidence_out,
     }
 
@@ -589,6 +698,10 @@ def _where(e, L):
     return f'{e["source"]}, {line}{loose}: "{e["quote"]}"'
 
 
+def _rounded_text(r) -> str:
+    return ", ".join(f'{x["claim"]} ← {x["quote"]}' for x in r["rounded"])
+
+
 def render(report, fmt="text", lang="en"):
     if fmt == "json":
         return json.dumps(report, ensure_ascii=False, indent=2)
@@ -602,6 +715,8 @@ def render(report, fmt="text", lang="en"):
             result = L[r["status"]]
             if r["missing_numbers"]:
                 result += f' ({L["missing"]}: {", ".join(r["missing_numbers"])})'
+            if r.get("rounded"):
+                result += f' ({L["rounded"]}: {_rounded_text(r)})'
             ev = "<br>".join(_where(e, L) for e in r["evidence"]) or "—"
             cell = lambda x: x.replace("|", "\\|").replace("\n", " ")
             lines.append(f'| {r["id"]} | {cell(r["text"])} | {cell(result)} | {cell(ev)} |')
@@ -612,6 +727,8 @@ def render(report, fmt="text", lang="en"):
             lines.append(f'{mark}[{r["id"]}] {L[r["status"]]}: {r["text"]}')
             if r["missing_numbers"]:
                 lines.append(f'     {L["missing"]}: {", ".join(r["missing_numbers"])}')
+            if r.get("rounded"):
+                lines.append(f'     {L["rounded"]}: {_rounded_text(r)}')
             for e in r["evidence"]:
                 lines.append(f"     - {_where(e, L)}")
         lines += ["", summary]

@@ -37,17 +37,20 @@ Numbers are collected from the claim and from all of its verified quotes, then c
 - Digits, including decimals (`4.30` equals `4.3`) and thousands separators (`20,000` equals `20000`).
 - English number words from *two* to *twenty*, the tens, and *hundred*. *One* is not read from a claim, because in prose it is usually a pronoun; in a quote, *one*, *a single*, and *a day/week/month/year/hour* do count as 1.
 - English month names next to a day number or a year (`12 November`, `Nov 12`, `December 2025`) add the month number. The verb *may* is never read as May.
-- Fractions compare as fractions: `三分之一`, `one-third` and `a third of` are all 1/3; in a quote, `1/3` is too. `a quarter` counts only as `a quarter of`.
+- Fractions compare as fractions: `三分之一`, `one-third` and `a third of` are all 1/3; in a quote, `1/3` is too. `a third` needs no `of`, but `a quarter` and `a half` count only when `of` follows (`once a quarter` is a period of time).
 - Scale words multiply the number before them: `4.3万`, `43,000` and `43 thousand` are all 43000; `亿`, `million` and `billion` work the same way. `百` or `千` right before `万` with no numeral in front (`每百万`) and `数百`, `上千` are not numbers.
 - A percentage matches the same value as a decimal: `99.6%` in a claim matches `0.996` in a quote, and the other way round.
 - In a quote, `none` counts as 0. A negated `一` in a claim (`一次都没变`, `没有一次`) is not 1.
 - A name with digits attached (`ranker-v3.2`, `echo-asr-2025-08-28`, `p90`, `B02`) is treated as a name, not a quantity, when it appears in a cited source. Currency codes (`RM4,350`) and quarters or halves of a year (`Q3`, `H1`, `FY2026`) are still amounts and dates.
 - The cited document's own title, from its file name or first heading (`update notice 2`), is a name.
-- Clock times are compared whole: `13:30` is not matched by a quote that has only `13:00` and `14:30`. 12-hour and Chinese times are converted first: `6 pm`, `6.00pm` and `下午6点` all become 18:00, `10点半` becomes 10:30. A bare `3点` counts as a time only after a part of the day (`上午`) or before words such as `前`, `到`, `开始`, `截止`; otherwise it is the number 3.
+- A mixed-case or all-capital name followed by a space and a number (`SigLIP 2`, `GPT 4`) is a name when that phrase appears in a cited source. Text in quotation marks or backticks in the claim (`“一次提示词”组`) is a name when it appears in a cited source.
+- A Chinese ordinal (`第 6 条`, `第二轮`) is a name when the same ordinal is in the quote's paragraph or the nearest heading above it. Citing a rule from under `第 6 条` as `第 7 条` is still flagged, even if the document also has a `第 7 条`.
+- Rounding: a claim's number also matches a more precise number in its quotes that rounds to it at the precision the claim uses (`0.31` for `0.314`, `17%` for `16.5%`, `156` for `155.9`, `8.5 万` for `85,252`), as long as the claim keeps at least two significant digits. `0.3` for `0.314` and `120` for `123` are still flagged. The report lists every rounded match.
+- Clock times are compared whole: `13:30` is not matched by a quote that has only `13:00` and `14:30`. A quote's `22:18:30` also counts as `22:18`; a claim that gives seconds is compared to the second. 12-hour and Chinese times are converted first: `6 pm`, `6.00pm` and `下午6点` all become 18:00, `10点半` becomes 10:30. A bare `3点` counts as a time only after a part of the day (`上午`) or before words such as `前`, `到`, `开始`, `截止`; otherwise it is the number 3.
 - Chinese numerals: `三十` is 30, `两` is 2, `二〇二六` is 2026, `百分之五十` is 50. A lone `一` counts in a claim only before a unit of time or quantity (`一个月`, `一周`, `一次`); words such as `一封`, `统一`, `这一点`, `十分`, `千万` are not read as numbers.
 - A four-digit year (1900–2099) may also come from anywhere in the same source file.
 
-Not worked out, on purpose: sums, differences, ratios, rounding (`约 4 万` for 43,000), currency or unit conversions, counts of days between two dates, and counts of listed items. These are numbers the document does not state, so the claim is reported as "numbers not in the quote" and the reader decides whether it is right. Also not read: Roman numerals, spelled-out numbers above *hundred*, and names with a space before the number (`Model 2`).
+Not worked out, on purpose: sums, differences, ratios, rounding to a single significant digit (`约 4 万` for 43,000), currency or unit conversions, counts of days between two dates, and counts of listed items. These are numbers the document does not state, so the claim is reported as "numbers not in the quote" and the reader decides whether it is right. Also not read: Roman numerals, spelled-out numbers above *hundred*, and names with a space before the number (`Model 2`).
 
 ## Result order
 
@@ -59,7 +62,9 @@ A claim gets the first status that applies: cited source not found, quote not in
 |---|---|---|
 | Supported | Quote found and every number in the claim is in it | Still read the claim against the quote: the script cannot see meaning |
 | Quote not in source | The quote was changed, merged from two places, or invented | Copy the exact sentence, or drop the claim |
-| Numbers not in the quote | The claim states a number the quote does not | Correct the number from the quote, or add the quote that states it |
+| Numbers not in the quote | The claim states a number the quote does not | Correct the number from the quote, or add the quote that states it (a number on another line of the document needs its own quote). Write group and model names as the document writes them, not translated |
 | No evidence given | No quote for this claim | Find one, or report the claim as unsupported |
 | Cited source not found | The `source` name does not match any file | Use a file name the report lists |
-| Quote too short to check | Under 6 characters (4 for Chinese) | Quote the whole sentence |
+| Quote too short to check | Under 6 characters (4 for Chinese) | Quote the whole sentence; for a short number in a table, such as `9/96`, quote the whole row |
+
+Quote only text you have saved as a file: save a web page as `.txt` or `.md` first, then cite that file.
