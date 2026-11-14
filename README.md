@@ -69,6 +69,15 @@ Exit code 0 means every claim passed, 1 that at least one did not, 2 that the in
 | A number rounded to two significant digits or more (`0.31` for `0.314`): accepted and listed as rounded | ✓ | | |
 | Sums, conversions and coarser rounding (`约 4 万` for `43,000`), Roman numerals: flagged for you to check | | | ✓ |
 
+## Used by
+
+These projects run the script on their own output:
+
+- **[grounded-review](https://github.com/Jason-d-e/grounded-review)**, an ad-review agent. Its `check_quotes` tool runs the script on every quote from the ad and from the cited clause, so a quote that is not word for word in either is caught before anyone reads the answer.
+- **A selling-point check.** Every quote it takes from product reviews is checked word for word against the review it came from.
+- **A resume-screening audit.** A frozen copy of script 0.2.0 checks the quotes behind each "meets the requirement" verdict, with the resume as the only source.
+- **A voice-agent evaluation.** The dates, times and numbers in the agent's spoken confirmations are checked against the record of tool calls, with the script unchanged.
+
 ## Related tools
 
 - **[Citations](https://platform.claude.com/docs/en/build-with-claude/citations) in the Claude API** extracts each quote straight from your documents, so the quote is always really there. If you build on that API, use it. It cites the answer Claude is writing in the Messages API. It does not check a claim's numbers against its quote, it is not available to agents that read files through tools or to other models, and it does not split a draft someone already wrote into claims to check. evidence-check covers those.

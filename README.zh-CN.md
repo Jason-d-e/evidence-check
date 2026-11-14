@@ -62,6 +62,15 @@ python skills/evidence-check/scripts/check_evidence.py claims.json --sources eva
 | 保留两位以上有效数字的四舍五入（`0.31` 对 `0.314`）：认，并在报告里列出 | ✓ | | |
 | 加总、换算和更粗的四舍五入（`约 4 万` 对 `43,000`）、罗马数字：会标出来，由你核对 | | | ✓ |
 
+## 谁在用它
+
+这几个项目在自己的产出上运行这个脚本：
+
+- **[grounded-review](https://github.com/Jason-d-e/grounded-review)**，广告审核 Agent。它的 `check_quotes` 工具把每一句广告原话和所引条款的原文交给脚本核对，不是逐字出现在广告或条款里的引文，在有人读到答案之前就会被拦下。
+- **卖点体检。** 从商品评价里摘出的每一句引文，都和它出自的那条评价逐字核对。
+- **简历初筛审计。** 用冻结的 0.2.0 脚本核对每个“符合要求”判断背后的引文，来源只有那份简历。
+- **语音 Agent 评测。** 助手说出口的确认里的日期、时间和数字，对照工具调用记录核对，脚本原样使用。
+
 ## 相关工具
 
 - **Claude API 的 [Citations](https://platform.claude.com/docs/en/build-with-claude/citations)（引用功能）** 直接从你的文档里截取引文，引文一定在原文里。在这个 API 上做产品，就用它。它是在 Messages API 里给 Claude 正在写的回答附出处：不检查说法里的数字是否在引文里；用工具读文件的 Agent 和其他模型用不到它；也不会把别人写好的草稿拆成一条条说法来核对。evidence-check 管的是这几块。
